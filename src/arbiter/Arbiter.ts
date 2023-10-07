@@ -8,7 +8,11 @@ export default class Arbiter {
     return !!piece;
   }
 
-  isTileOccupiedByOpponent(
+  getOpponent(pieceColor: Color) {
+    return pieceColor === Color.WHITE ? Color.BLACK : Color.WHITE;
+  }
+
+  isTileOccupiedBy(
     pos: Position,
     boardState: Piece[],
     pieceColor: Color
@@ -17,7 +21,7 @@ export default class Arbiter {
       (piece) =>
         piece.position.x === pos.x &&
         piece.position.y === pos.y &&
-        piece.color !== pieceColor
+        piece.color === pieceColor
     );
 
     return !!piece;
@@ -31,49 +35,93 @@ export default class Arbiter {
     boardState: Piece[]
   ): boolean {
     // Rules for Pawn
-    if (pieceType === PieceType.PAWN) {
-      const specialRow = pieceColor === Color.WHITE ? 1 : 6;
-      const pawnDirection = pieceColor === Color.WHITE ? 1 : -1;
+    switch (pieceType) {
+      case PieceType.PAWN:
+        {
+          const specialRow = pieceColor === Color.WHITE ? 1 : 6;
+          const pawnDirection = pieceColor === Color.WHITE ? 1 : -1;
 
-      // MOVEMENT LOGIC
-      // Check if pawn is using its first move
-      if (
-        srcPosition.x === destPosition.x &&
-        srcPosition.y === specialRow &&
-        destPosition.y - srcPosition.y === 2 * pawnDirection
-      ) {
-        if (
-          !this.isTileOccupied(destPosition, boardState) &&
-          !this.isTileOccupied(
-            { x: destPosition.x, y: destPosition.y - pawnDirection },
-            boardState
-          )
-        ) {
-          return true;
+          // MOVEMENT LOGIC
+          // Check if pawn is using its first move
+          if (
+            srcPosition.x === destPosition.x &&
+            srcPosition.y === specialRow &&
+            destPosition.y - srcPosition.y === 2 * pawnDirection
+          ) {
+            if (
+              !this.isTileOccupied(destPosition, boardState) &&
+              !this.isTileOccupied(
+                { x: destPosition.x, y: destPosition.y - pawnDirection },
+                boardState
+              )
+            ) {
+              return true;
+            }
+          }
+          // Single step forwarding
+          else if (
+            srcPosition.x === destPosition.x &&
+            destPosition.y - srcPosition.y === pawnDirection
+          ) {
+            if (!this.isTileOccupied(destPosition, boardState)) {
+              return true;
+            }
+          }
+          // ATTACK LOGIC
+          else if (
+            (destPosition.x - srcPosition.x === 1 ||
+              destPosition.x - srcPosition.x === -1) &&
+            destPosition.y - srcPosition.y === pawnDirection
+          ) {
+            // ATTACK ON BOTTOM/UPPER LEFT/RIGHT
+            if (
+              this.isTileOccupiedBy(
+                destPosition,
+                boardState,
+                this.getOpponent(pieceColor)
+              )
+            ) {
+              return true;
+            }
+          }
         }
-      }
-      // Single step forwarding
-      else if (
-        srcPosition.x === destPosition.x &&
-        destPosition.y - srcPosition.y === pawnDirection
-      ) {
-        if (!this.isTileOccupied(destPosition, boardState)) {
-          return true;
+        break;
+
+      case PieceType.KNIGHT:
+        {
+          const movesAllowed = [
+            [2, 1],
+            [2, -1],
+            [-2, 1],
+            [-2, -1],
+            [1, 2],
+            [1, -2],
+            [-1, 2],
+            [-1, -2],
+          ];
+          const diff = [
+            destPosition.x - srcPosition.x,
+            destPosition.y - srcPosition.y,
+          ];
+          return movesAllowed.some(
+            (move) =>
+              move[0] === diff[0] &&
+              move[1] === diff[1] &&
+              !this.isTileOccupiedBy(destPosition, boardState, pieceColor)
+          );
         }
-      }
-      // ATTACK LOGIC
-      else if (
-        (destPosition.x - srcPosition.x === 1 ||
-          destPosition.x - srcPosition.x === -1) &&
-        destPosition.y - srcPosition.y === pawnDirection
-      ) {
-        // ATTACK ON BOTTOM/UPPER LEFT/RIGHT
-        if (
-          this.isTileOccupiedByOpponent(destPosition, boardState, pieceColor)
-        ) {
-          return true;
-        }
-      }
+        break;
+      case PieceType.KING:
+        break;
+      case PieceType.BISHOP:
+        break;
+      case PieceType.QUEEN:
+        break;
+      case PieceType.ROOK:
+        break;
+
+      default:
+        break;
     }
     return false;
   }
