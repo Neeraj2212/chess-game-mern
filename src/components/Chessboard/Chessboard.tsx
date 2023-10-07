@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import Tile from "../Tile/Tile";
 import "./Chessboard.css";
 
@@ -92,6 +93,11 @@ for (let i = 0; i < 8; i++) {
 }
 
 const Chessboard = () => {
+  const [activeChessPiece, setActiveChessPiece] = useState<HTMLElement | null>(
+    null
+  );
+  const chessboardRef = useRef<HTMLDivElement>(null);
+
   const board = [];
 
   for (let j = 7; j >= 0; j--)
@@ -107,7 +113,69 @@ const Chessboard = () => {
       board.push(<Tile key={`${i}-${j}`} number={i + j} image={image} />);
     }
 
-  return <div id="chessboard">{board}</div>;
+  const updateChessPieceLocation = (
+    element: HTMLElement,
+    posX: number,
+    posY: number
+  ) => {
+    const chessboard = chessboardRef.current;
+
+    if (chessboard && element && element.classList.contains("chess-piece")) {
+      const minX = chessboard.offsetLeft - 25; // To Handle piece around edges
+      const minY = chessboard.offsetTop - 25;
+      const maxX = chessboard.offsetLeft + chessboard.clientWidth - 80;
+      const maxY = chessboard.offsetTop + chessboard.clientHeight - 80;
+
+      const mousePositionX = posX - 50; // To make it relative to center
+      const mousePostionY = posY - 50; // To make it relative to center
+
+      element.style.position = "absolute";
+
+      // Check for the position to remain withing the chessboard
+      element.style.left =
+        mousePositionX < minX
+          ? `${minX}px`
+          : mousePositionX > maxX
+          ? `${maxX}px`
+          : `${mousePositionX}px`;
+
+      element.style.top =
+        mousePostionY < minY
+          ? `${minY}px`
+          : mousePostionY > maxY
+          ? `${maxY}px`
+          : `${mousePostionY}px`;
+    }
+  };
+
+  const grabPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const grabbedElement = e.target as HTMLDivElement;
+    setActiveChessPiece(grabbedElement);
+    updateChessPieceLocation(grabbedElement, e.clientX, e.clientY);
+  };
+
+  const movePiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (activeChessPiece)
+      updateChessPieceLocation(activeChessPiece, e.clientX, e.clientY);
+  };
+
+  const dropPiece = () => {
+    setActiveChessPiece(null);
+  };
+
+  return (
+    <div
+      onMouseUp={dropPiece}
+      onMouseMove={(e) => {
+        movePiece(e);
+      }}
+      onMouseDown={(e) => grabPiece(e)}
+      ref={chessboardRef}
+      id="chessboard"
+    >
+      {board}
+    </div>
+  );
 };
 
 export default Chessboard;
