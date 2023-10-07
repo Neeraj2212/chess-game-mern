@@ -1,133 +1,23 @@
 import { useRef, useState } from "react";
+import { GRID_CENTER, GRID_SIZE, Position } from "../../../helper/Constants";
+import { intialChessPieces } from "../../../helper/Utils";
+import Arbiter from "../../arbiter/Arbiter";
 import Tile from "../Tile/Tile";
 import "./Chessboard.css";
-import Arbiter from "../../arbiter/Arbiter";
-
-export interface Piece {
-  image: string;
-  positionX: number;
-  positionY: number;
-  type: PieceType;
-  color: Color;
-}
-
-export enum PieceType {
-  BISHOP,
-  KING,
-  KNIGHT,
-  PAWN,
-  QUEEN,
-  ROOK,
-}
-
-export enum Color {
-  BLACK,
-  WHITE,
-}
-
-function intialChessPieces() {
-  const pieces: Piece[] = [];
-  for (let p = 0; p < 2; p++) {
-    const color = p === 0 ? Color.BLACK : Color.WHITE;
-    const type = color === Color.BLACK ? "b" : "w";
-    const y = p === 0 ? 7 : 0;
-
-    pieces.push(
-      {
-        image: `assets/images/rook_${type}.png`,
-        positionX: 0,
-        positionY: y,
-        type: PieceType.ROOK,
-        color: color,
-      },
-      {
-        image: `assets/images/rook_${type}.png`,
-        positionX: 7,
-        positionY: y,
-        type: PieceType.ROOK,
-        color: color,
-      },
-      {
-        image: `assets/images/knight_${type}.png`,
-        positionX: 1,
-        positionY: y,
-        type: PieceType.KNIGHT,
-        color: color,
-      },
-      {
-        image: `assets/images/knight_${type}.png`,
-        positionX: 6,
-        positionY: y,
-        type: PieceType.KNIGHT,
-        color: color,
-      },
-      {
-        image: `assets/images/bishop_${type}.png`,
-        positionX: 2,
-        positionY: y,
-        type: PieceType.BISHOP,
-        color: color,
-      },
-      {
-        image: `assets/images/bishop_${type}.png`,
-        positionX: 5,
-        positionY: y,
-        type: PieceType.BISHOP,
-        color: color,
-      },
-      {
-        image: `assets/images/queen_${type}.png`,
-        positionX: 3,
-        positionY: y,
-        type: PieceType.QUEEN,
-        color: color,
-      },
-      {
-        image: `assets/images/king_${type}.png`,
-        positionX: 4,
-        positionY: y,
-        type: PieceType.KING,
-        color: color,
-      }
-    );
-  }
-
-  for (let i = 0; i < 8; i++) {
-    pieces.push({
-      image: "assets/images/pawn_b.png",
-      positionX: i,
-      positionY: 6,
-      type: PieceType.PAWN,
-      color: Color.BLACK,
-    });
-  }
-
-  for (let i = 0; i < 8; i++) {
-    pieces.push({
-      image: "assets/images/pawn_w.png",
-      positionX: i,
-      positionY: 1,
-      type: PieceType.PAWN,
-      color: Color.WHITE,
-    });
-  }
-
-  return pieces;
-}
 
 const Chessboard = () => {
   const chessboardRef = useRef<HTMLDivElement>(null);
-
   // Active chess piece info
   const [activeChessPiece, setActiveChessPiece] = useState<HTMLElement | null>(
     null
   );
-  const [activePieceX, setActivePieceX] = useState(0);
-  const [activePieceY, setActivePieceY] = useState(0);
+  const [activePiecePos, setActivePiecePos] = useState<Position>({
+    x: -1,
+    y: -1,
+  });
 
   // Referee of the game to follow the rules
   const arbiter = new Arbiter();
-
   // Array of pieces on the board
   const [pieces, setPieces] = useState(intialChessPieces());
 
@@ -136,13 +26,10 @@ const Chessboard = () => {
   // Inititalize board with pieces
   for (let j = 7; j >= 0; j--)
     for (let i = 0; i <= 7; i++) {
-      let image = undefined;
-
-      pieces.forEach((piece) => {
-        if (piece.positionX === i && piece.positionY === j) {
-          image = piece.image;
-        }
-      });
+      const piece = pieces.find(
+        (piece) => piece.position.x === i && piece.position.y === j
+      );
+      const image = piece ? piece.image : undefined;
 
       board.push(<Tile key={`${i}-${j}`} number={i + j} image={image} />);
     }
@@ -160,8 +47,8 @@ const Chessboard = () => {
       const maxX = chessboard.offsetLeft + chessboard.clientWidth - 75;
       const maxY = chessboard.offsetTop + chessboard.clientHeight - 80;
 
-      const mousePositionX = posX - 50; // To make it relative to center
-      const mousePostionY = posY - 50; // To make it relative to center
+      const mousePositionX = posX - GRID_CENTER; // To make it relative to center
+      const mousePostionY = posY - GRID_CENTER; // To make it relative to center
 
       element.style.position = "absolute";
       element.style.zIndex = "10";
@@ -183,16 +70,14 @@ const Chessboard = () => {
     }
   };
 
-  const calculateCurrentPos = (
-    mouseX: number,
-    mouseY: number
-  ): { x: number; y: number } => {
+  // Function to calculate co-ordinates of mouse pointers
+  const calculateCurrentPos = (mouseX: number, mouseY: number): Position => {
     const chessboard = chessboardRef.current;
 
     if (chessboard) {
-      const x = Math.floor((mouseX - chessboard?.offsetLeft) / 100);
+      const x = Math.floor((mouseX - chessboard?.offsetLeft) / GRID_SIZE);
       const y = Math.abs(
-        Math.ceil((mouseY - chessboard.offsetTop - 800) / 100)
+        Math.ceil((mouseY - chessboard.offsetTop - 800) / GRID_SIZE)
       );
       return { x, y };
     }
@@ -201,10 +86,9 @@ const Chessboard = () => {
 
   const grabPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const grabbedElement = e.target as HTMLDivElement;
-    const { x, y } = calculateCurrentPos(e.clientX, e.clientY);
+    setActivePiecePos(calculateCurrentPos(e.clientX, e.clientY));
     setActiveChessPiece(grabbedElement);
-    setActivePieceX(x);
-    setActivePieceY(y);
+
     updateChessPieceLocation(grabbedElement, e.clientX, e.clientY);
   };
 
@@ -216,18 +100,17 @@ const Chessboard = () => {
   const dropPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     activeChessPiece?.style.removeProperty("z-index");
 
-    const { x: destX, y: destY } = calculateCurrentPos(e.clientX, e.clientY);
+    const destPos = calculateCurrentPos(e.clientX, e.clientY);
 
     const currentPiece = pieces.find(
       (piece) =>
-        piece.positionX === activePieceX && piece.positionY === activePieceY
+        piece.position.x === activePiecePos.x &&
+        piece.position.y === activePiecePos.y
     )!;
 
     const isValidMove = arbiter.isValidMove(
-      activePieceX,
-      activePieceY,
-      destX,
-      destY,
+      activePiecePos,
+      destPos,
       currentPiece.type,
       currentPiece.color,
       pieces
@@ -236,15 +119,16 @@ const Chessboard = () => {
     if (isValidMove) {
       // If destination is attacked
       const attackedPieceIndex = pieces.findIndex(
-        (piece) => piece.positionX === destX && piece.positionY === destY
+        (piece) =>
+          piece.position.x === destPos.x && piece.position.y === destPos.y
       );
       if (attackedPieceIndex !== -1) {
         pieces.splice(attackedPieceIndex, 1);
       }
 
       // Update current piece
-      currentPiece.positionX = destX;
-      currentPiece.positionY = destY;
+      currentPiece.position.x = destPos.x;
+      currentPiece.position.y = destPos.y;
       setPieces([...pieces]);
     } else {
       if (activeChessPiece) {

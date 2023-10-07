@@ -1,24 +1,22 @@
-import { Color, Piece, PieceType } from "../components/Chessboard/Chessboard";
+import { Color, Piece, PieceType, Position } from "../../helper/Constants";
 
 export default class Arbiter {
-  isTileOccupied(posX: number, posY: number, boardState: Piece[]): boolean {
+  isTileOccupied(pos: Position, boardState: Piece[]): boolean {
     const piece = boardState.find(
-      (piece) => piece.positionX === posX && piece.positionY === posY
+      (piece) => piece.position.x === pos.x && piece.position.y === pos.y
     );
-
     return !!piece;
   }
 
   isTileOccupiedByOpponent(
-    posX: number,
-    posY: number,
+    pos: Position,
     boardState: Piece[],
     pieceColor: Color
   ): boolean {
     const piece = boardState.find(
       (piece) =>
-        piece.positionX === posX &&
-        piece.positionY === posY &&
+        piece.position.x === pos.x &&
+        piece.position.y === pos.y &&
         piece.color !== pieceColor
     );
 
@@ -26,10 +24,8 @@ export default class Arbiter {
   }
 
   isValidMove(
-    srcX: number,
-    srcY: number,
-    destX: number,
-    destY: number,
+    srcPosition: Position,
+    destPosition: Position,
     pieceType: PieceType,
     pieceColor: Color,
     boardState: Piece[]
@@ -42,31 +38,38 @@ export default class Arbiter {
       // MOVEMENT LOGIC
       // Check if pawn is using its first move
       if (
-        srcX === destX &&
-        srcY === specialRow &&
-        destY - srcY === 2 * pawnDirection
+        srcPosition.x === destPosition.x &&
+        srcPosition.y === specialRow &&
+        destPosition.y - srcPosition.y === 2 * pawnDirection
       ) {
         if (
-          !this.isTileOccupied(destX, destY, boardState) &&
-          !this.isTileOccupied(destX, destY - pawnDirection, boardState)
+          !this.isTileOccupied(destPosition, boardState) &&
+          !this.isTileOccupied(
+            { x: destPosition.x, y: destPosition.y - pawnDirection },
+            boardState
+          )
         ) {
           return true;
         }
       }
       // Single step forwarding
-      else if (srcX === destX && destY - srcY === pawnDirection) {
-        if (!this.isTileOccupied(destX, destY, boardState)) {
+      else if (
+        srcPosition.x === destPosition.x &&
+        destPosition.y - srcPosition.y === pawnDirection
+      ) {
+        if (!this.isTileOccupied(destPosition, boardState)) {
           return true;
         }
       }
       // ATTACK LOGIC
       else if (
-        (destX - srcX === 1 || destX - srcX === -1) &&
-        destY - srcY === pawnDirection
+        (destPosition.x - srcPosition.x === 1 ||
+          destPosition.x - srcPosition.x === -1) &&
+        destPosition.y - srcPosition.y === pawnDirection
       ) {
         // ATTACK ON BOTTOM/UPPER LEFT/RIGHT
         if (
-          this.isTileOccupiedByOpponent(destX, destY, boardState, pieceColor)
+          this.isTileOccupiedByOpponent(destPosition, boardState, pieceColor)
         ) {
           return true;
         }
