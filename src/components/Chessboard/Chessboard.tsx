@@ -145,7 +145,7 @@ const Chessboard = () => {
   };
 
   return (
-    <div>
+    <div className="chessboard-wrapper">
       <div
         onMouseUp={(e) => dropPiece(e)}
         onMouseMove={(e) => {

@@ -1,10 +1,11 @@
 .show-turn {
   display: grid;
-  height: 100%;
-  margin-top: 100px;
+  width: 100%;
+  place-self: baseline;
 }
 
 .show-turn .wrapper {
+  width: 100%;
   place-self: start;
   display: flex;
   justify-content: center;
@@ -13,7 +14,6 @@
 }
 
 .turn-tile .chess-piece {
-  place-self: start;
   width: 100px;
   height: 100px;
   background-repeat: no-repeat;

@@ -1,0 +1,20 @@
+.fallen-pieces-block {
+  place-self: baseline;
+  margin: 0 2rem;
+}
+
+.fallen-pieces-block > h2 {
+  width: 100%;
+  text-align: left;
+}
+
+.fallen-pieces-rack {
+  display: grid;
+  border: 2px solid white;
+  grid-template-columns: repeat(10, 1fr);
+}
+
+.fallen-pieces-rack > img {
+  width: 100%;
+  height: auto;
+}
