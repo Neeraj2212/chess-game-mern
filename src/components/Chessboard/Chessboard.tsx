@@ -48,20 +48,27 @@ const Chessboard = () => {
       element.style.position = "absolute";
       element.style.zIndex = "10";
 
-      // Check for the position to remain withing the chessboard
-      element.style.left =
-        mousePositionX < minX
-          ? `${minX}px`
-          : mousePositionX > maxX
-          ? `${maxX}px`
-          : `${mousePositionX}px`;
+      // Check if the piece is being dragged outside the chessboard
+      if (
+        mousePositionX < minX ||
+        mousePositionX > maxX ||
+        mousePostionY < minY ||
+        mousePostionY > maxY
+      ) {
+        // Trigger mouse up event to drop piece to its original location
+        setActiveChessPiece(null);
+        const event = new MouseEvent("mouseup", {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+        });
+        chessboard.dispatchEvent(event);
 
-      element.style.top =
-        mousePostionY < minY
-          ? `${minY}px`
-          : mousePostionY > maxY
-          ? `${maxY}px`
-          : `${mousePostionY}px`;
+        return;
+      }
+
+      element.style.top = `${mousePostionY}px`;
+      element.style.left = `${mousePositionX}px`;
     }
   };
 
@@ -81,21 +88,22 @@ const Chessboard = () => {
 
   const grabPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const grabbedElement = e.target as HTMLDivElement;
-    setActivePiecePos(calculateCurrentPos(e.clientX, e.clientY));
+    if (!grabbedElement.classList.contains("chess-piece")) return;
+    setActivePiecePos(calculateCurrentPos(e.pageX, e.pageY));
     setActiveChessPiece(grabbedElement);
 
-    updateChessPieceLocation(grabbedElement, e.clientX, e.clientY);
+    updateChessPieceLocation(grabbedElement, e.pageX, e.pageY);
   };
 
   const movePiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (activeChessPiece)
-      updateChessPieceLocation(activeChessPiece, e.clientX, e.clientY);
+      updateChessPieceLocation(activeChessPiece, e.pageX, e.pageY);
   };
 
   const dropPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     activeChessPiece?.style.removeProperty("z-index");
 
-    const destPos = calculateCurrentPos(e.clientX, e.clientY);
+    const destPos = calculateCurrentPos(e.pageX, e.pageY);
     const currentPiece = board.getPieceAt(activePiecePos);
 
     if (currentPiece) {
@@ -112,6 +120,7 @@ const Chessboard = () => {
       }
     }
 
+    setActivePiecePos({ x: -1, y: -1 });
     setActiveChessPiece(null);
   };
 

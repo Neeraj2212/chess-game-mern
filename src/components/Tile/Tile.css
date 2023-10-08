@@ -16,8 +16,10 @@
 
 .tile.white-tile {
   background-color: #eed3ac;
+  user-select: none;
 }
 
 .tile.black-tile {
   background-color: #ac7d58;
+  user-select: none;
 }
