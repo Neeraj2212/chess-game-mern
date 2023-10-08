@@ -1,11 +1,12 @@
 import { Color, PieceType, Position } from "@helpers/Constants";
+import { Board } from "./Board";
 
 export abstract class Piece {
   abstract image: string;
   position: Position;
   abstract type: PieceType;
   color: Color;
-  possibleMoves?: Position[];
+  possibleMoves: Position[] = [];
 
   constructor(
     position: Position,
@@ -17,7 +18,7 @@ export abstract class Piece {
     this.possibleMoves = possibleMoves;
   }
 
-  abstract isValidMove(destination: Position): boolean;
-  abstract updatePossibleMoves(): void;
+  abstract isValidMove(destination: Position, board: Board): boolean;
+  abstract updatePossibleMoves(board: Board): void;
   abstract clone(): Piece;
 }

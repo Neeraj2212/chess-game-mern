@@ -20,6 +20,6 @@ export class Rook extends Piece {
   }
 
   clone(): Piece {
-    return;
+    return new Rook(this.position, this.color);
   }
 }

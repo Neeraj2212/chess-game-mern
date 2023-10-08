@@ -1,8 +1,7 @@
+import { Board } from "@src/models/Board";
 import { useRef, useState } from "react";
-import { GRID_CENTER, GRID_SIZE, Position } from "../../../helpers/Constants";
-import { intialChessPieces } from "../../../helpers/Utils";
-import Arbiter from "../../arbiter/Arbiter";
-import Tile from "../Tile/Tile";
+import { GRID_CENTER, GRID_SIZE, Position } from "@helpers/Constants";
+import Tile from "@components/Tile/Tile";
 import "./Chessboard.css";
 
 const Chessboard = () => {
@@ -16,22 +15,18 @@ const Chessboard = () => {
     y: -1,
   });
 
-  // Referee of the game to follow the rules
-  const arbiter = new Arbiter();
-  // Array of pieces on the board
-  const [pieces, setPieces] = useState(intialChessPieces());
+  const [board, setBoard] = useState(new Board());
 
-  const board = [];
+  const boardElements = [];
 
   // Inititalize board with pieces
   for (let j = 7; j >= 0; j--)
     for (let i = 0; i <= 7; i++) {
-      const piece = pieces.find(
-        (piece) => piece.position.x === i && piece.position.y === j
-      );
+      const piece = board.getPieceAt({ x: i, y: j });
       const image = piece ? piece.image : undefined;
-
-      board.push(<Tile key={`${i}-${j}`} number={i + j} image={image} />);
+      boardElements.push(
+        <Tile key={`${i}-${j}`} number={i + j} image={image} />
+      );
     }
 
   const updateChessPieceLocation = (
@@ -101,40 +96,19 @@ const Chessboard = () => {
     activeChessPiece?.style.removeProperty("z-index");
 
     const destPos = calculateCurrentPos(e.clientX, e.clientY);
+    const currentPiece = board.getPieceAt(activePiecePos);
 
-    const currentPiece = pieces.find(
-      (piece) =>
-        piece.position.x === activePiecePos.x &&
-        piece.position.y === activePiecePos.y
-    )!;
-
-    const isValidMove = arbiter.isValidMove(
-      activePiecePos,
-      destPos,
-      currentPiece.type,
-      currentPiece.color,
-      pieces
-    );
-
-    if (isValidMove) {
-      // If destination is attacked
-      const attackedPieceIndex = pieces.findIndex(
-        (piece) =>
-          piece.position.x === destPos.x && piece.position.y === destPos.y
-      );
-      if (attackedPieceIndex !== -1) {
-        pieces.splice(attackedPieceIndex, 1);
-      }
-
-      // Update current piece
-      currentPiece.position.x = destPos.x;
-      currentPiece.position.y = destPos.y;
-      setPieces([...pieces]);
-    } else {
-      if (activeChessPiece) {
-        activeChessPiece.style.position = "relative";
-        activeChessPiece.style.removeProperty("top");
-        activeChessPiece.style.removeProperty("left");
+    if (currentPiece) {
+      const isValidMove = currentPiece.isValidMove(destPos, board);
+      if (isValidMove) {
+        board.movePiece(activePiecePos, destPos);
+        setBoard(board.clone());
+      } else {
+        if (activeChessPiece) {
+          activeChessPiece.style.position = "relative";
+          activeChessPiece.style.removeProperty("top");
+          activeChessPiece.style.removeProperty("left");
+        }
       }
     }
 
@@ -151,7 +125,7 @@ const Chessboard = () => {
       ref={chessboardRef}
       id="chessboard"
     >
-      {board}
+      {boardElements}
     </div>
   );
 };
