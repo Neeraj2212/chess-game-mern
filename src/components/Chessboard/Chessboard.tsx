@@ -1,8 +1,15 @@
 import Tile from "@components/Tile/Tile";
-import { GRID_CENTER, GRID_SIZE, Position } from "@helpers/Constants";
+import {
+  GRID_CENTER,
+  GRID_SIZE,
+  PieceType,
+  Position,
+} from "@helpers/Constants";
 import { GameContext } from "@src/contexts/GameContext";
 import { useContext, useRef, useState } from "react";
 import "./Chessboard.css";
+import PawnPromotionModal from "./PawnPromotionModal";
+import { Pawn } from "@src/models/Pawn";
 
 const Chessboard = () => {
   const chessboardRef = useRef<HTMLDivElement>(null);
@@ -15,12 +22,17 @@ const Chessboard = () => {
     x: -1,
     y: -1,
   });
-  const [possibleMoves, setPossibleMoves] = useState<Position[]>([]);
 
   const { board, setBoard } = useContext(GameContext);
-  const boardElements = [];
+  const [possibleMoves, setPossibleMoves] = useState<Position[]>([]);
+
+  // Destination position to pass on to the modal
+  const [showPawnPromotionModal, setShowPawnPromotionModal] = useState(false);
+  const [promotionPiecePosition, setPromotionPiecePosition] =
+    useState<Position>({ x: -1, y: -1 });
 
   // Inititalize board with pieces
+  const boardElements = [];
   for (let j = 7; j >= 0; j--)
     for (let i = 0; i <= 7; i++) {
       const piece = board.getPieceAt({ x: i, y: j });
@@ -74,7 +86,7 @@ const Chessboard = () => {
         pieceTopPosition > maxY
       ) {
         // Trigger mouse up event to drop piece to its original location
-        console.log("bahar gya");
+
         const event = new MouseEvent("mouseup", {
           view: window,
           bubbles: true,
@@ -130,15 +142,21 @@ const Chessboard = () => {
 
   const dropPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     activeChessPiece?.style.removeProperty("z-index");
-    console.log("Mouse choda");
 
     const destPos = calculateCurrentPos(e.pageX, e.pageY);
     const currentPiece = board.getPieceAt(activePiecePos);
 
     if (currentPiece) {
       const isValidMove = currentPiece.isValidMove(destPos, board);
+
       if (isValidMove) {
         board.movePiece(activePiecePos, destPos);
+        if (board.isPawnPromotionAllowed(currentPiece, destPos)) {
+          cleanUp();
+          setPromotionPiecePosition(destPos);
+          setShowPawnPromotionModal(true);
+          return;
+        }
         board.togglePlayerTurn();
         setBoard(board.clone());
       } else {
@@ -149,14 +167,32 @@ const Chessboard = () => {
         }
       }
     }
+    cleanUp();
+  };
 
+  const cleanUp = () => {
     setPossibleMoves([]);
     setActivePiecePos({ x: -1, y: -1 });
     setActiveChessPiece(null);
   };
 
+  const onPawnPromotion = (pieceType: PieceType) => {
+    const piece = board.getPieceAt(promotionPiecePosition);
+    if (piece && piece instanceof Pawn) {
+      board.promotePawn(piece, pieceType);
+      board.togglePlayerTurn();
+      setBoard(board.clone());
+      setPromotionPiecePosition({ x: -1, y: -1 });
+    }
+  };
+
   return (
     <div className="chessboard-wrapper" ref={chessboardWrapperRef}>
+      <PawnPromotionModal
+        show={showPawnPromotionModal}
+        setShow={setShowPawnPromotionModal}
+        onPawnPromotion={onPawnPromotion}
+      />
       <div
         onMouseUp={(e) => dropPiece(e)}
         onMouseMove={(e) => {

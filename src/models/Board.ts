@@ -1,12 +1,12 @@
+import { BoardState, PieceType } from "@helpers/Constants";
 import { Color, Position } from "../../helpers/Constants";
 import { Bishop } from "./Bishop";
 import { King } from "./King";
 import { Knight } from "./Knight";
 import { Pawn } from "./Pawn";
-import { BoardState } from "@helpers/Constants";
+import { Piece } from "./Piece";
 import { Queen } from "./Queen";
 import { Rook } from "./Rook";
-import { Piece } from "./Piece";
 
 export class Board {
   boardState: BoardState;
@@ -21,6 +21,19 @@ export class Board {
     this.boardState = boardState || this.getInitialPieces();
     this.fallenPieces = fallenPieces || [];
     this.playerTurn = playerTurn || Color.WHITE;
+  }
+
+  isPawnPromotionAllowed(piece: Piece, dest: Position): boolean {
+    const endRow = piece.color === Color.WHITE ? 7 : 0;
+    return piece instanceof Pawn && dest.y === endRow;
+  }
+
+  promotePawn(piece: Piece, type: PieceType) {
+    console.log("Promoting pawn");
+    const position = piece.position;
+    const color = piece.color;
+    const newPiece = this.createPieceByType(type, position, color);
+    this.boardState[position.x][position.y] = newPiece;
   }
 
   togglePlayerTurn() {
@@ -88,6 +101,23 @@ export class Board {
 
   isTileValid(pos: Position): boolean {
     return pos.x >= 0 && pos.x < 8 && pos.y >= 0 && pos.y < 8;
+  }
+
+  createPieceByType(type: PieceType, position: Position, color: Color) {
+    switch (type) {
+      case PieceType.PAWN:
+        return new Pawn(position, color);
+      case PieceType.ROOK:
+        return new Rook(position, color);
+      case PieceType.KNIGHT:
+        return new Knight(position, color);
+      case PieceType.BISHOP:
+        return new Bishop(position, color);
+      case PieceType.QUEEN:
+        return new Queen(position, color);
+      case PieceType.KING:
+        return new King(position, color);
+    }
   }
 
   clone(): Board {

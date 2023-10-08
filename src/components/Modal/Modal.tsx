@@ -1,12 +1,21 @@
-import "./modal.css";
+import "./Modal.css";
 
 interface ModalProps {
-  show: boolean;
-  onClose: () => void;
+  children: React.ReactNode;
+  className?: string;
+  show?: boolean;
 }
 
-const Modal = () => {
-  return <div>Modal</div>;
+export const Modal: React.FC<ModalProps> = ({ children, className, show }) => {
+  return (
+    <div
+      className={`modal ${className ? className : ""} ${
+        show ? "show" : "hidden"
+      }`}
+    >
+      <div className="modal-inner">
+        <div className="modal-body">{children}</div>
+      </div>
+    </div>
+  );
 };
-
-export default Modal;

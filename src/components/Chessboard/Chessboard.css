@@ -1,8 +1,35 @@
 #chessboard {
-    height: 800px;
-    width: 800px;
-    background-color: #ac7d58;
-    display: grid;
-    grid-template-columns: repeat(8,100px);
-    grid-template-rows: repeat(8,100px);
+  height: 800px;
+  width: 800px;
+  background-color: #ac7d58;
+  display: grid;
+  grid-template-columns: repeat(8, 100px);
+  grid-template-rows: repeat(8, 100px);
+}
+
+.pawn-promotion-modal {
+  position: absolute;
+  display: grid;
+  place-content: center;
+  width: 802px;
+  height: 802px;
+  z-index: 20;
+}
+
+.pawn-promotion-modal .modal-inner {
+  width: 802px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pawn-promotion-modal .pieces img {
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+}
+
+.pawn-promotion-modal .pieces img:hover {
+  cursor: pointer;
+  translate: 0 -5px;
 }
