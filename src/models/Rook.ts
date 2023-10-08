@@ -13,6 +13,7 @@ export class Rook extends Piece {
   }
 
   isValidMove(destination: Position, board: Board): boolean {
+    if (this.color !== board.playerTurn) return false;
     this.updatePossibleMoves(board);
     for (const move of this.possibleMoves) {
       if (move.x === destination.x && move.y === destination.y) {
@@ -24,6 +25,7 @@ export class Rook extends Piece {
 
   updatePossibleMoves(board: Board): void {
     this.possibleMoves = [];
+    if (this.color !== board.playerTurn) return;
     const directions = [
       { x: 0, y: 1 },
       { x: 0, y: -1 },

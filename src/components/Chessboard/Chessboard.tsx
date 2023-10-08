@@ -1,7 +1,7 @@
-import { Board } from "@src/models/Board";
-import { useRef, useState } from "react";
-import { GRID_CENTER, GRID_SIZE, Position } from "@helpers/Constants";
 import Tile from "@components/Tile/Tile";
+import { GRID_CENTER, GRID_SIZE, Position } from "@helpers/Constants";
+import { GameContext } from "@src/contexts/GameContext";
+import { useContext, useRef, useState } from "react";
 import "./Chessboard.css";
 
 const Chessboard = () => {
@@ -15,8 +15,7 @@ const Chessboard = () => {
     y: -1,
   });
 
-  const [board, setBoard] = useState(new Board());
-
+  const { board, setBoard } = useContext(GameContext);
   const boardElements = [];
 
   // Inititalize board with pieces
@@ -110,6 +109,7 @@ const Chessboard = () => {
       const isValidMove = currentPiece.isValidMove(destPos, board);
       if (isValidMove) {
         board.movePiece(activePiecePos, destPos);
+        board.togglePlayerTurn();
         setBoard(board.clone());
       } else {
         if (activeChessPiece) {
@@ -125,16 +125,18 @@ const Chessboard = () => {
   };
 
   return (
-    <div
-      onMouseUp={(e) => dropPiece(e)}
-      onMouseMove={(e) => {
-        movePiece(e);
-      }}
-      onMouseDown={(e) => grabPiece(e)}
-      ref={chessboardRef}
-      id="chessboard"
-    >
-      {boardElements}
+    <div>
+      <div
+        onMouseUp={(e) => dropPiece(e)}
+        onMouseMove={(e) => {
+          movePiece(e);
+        }}
+        onMouseDown={(e) => grabPiece(e)}
+        ref={chessboardRef}
+        id="chessboard"
+      >
+        {boardElements}
+      </div>
     </div>
   );
 };

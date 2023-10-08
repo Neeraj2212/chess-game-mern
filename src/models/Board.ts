@@ -11,10 +11,21 @@ import { Piece } from "./Piece";
 export class Board {
   boardState: BoardState;
   fallenPieces: Piece[] = [];
+  playerTurn: Color = Color.WHITE;
 
-  constructor(boardState?: BoardState, fallenPieces?: Piece[]) {
+  constructor(
+    boardState?: BoardState,
+    fallenPieces?: Piece[],
+    playerTurn?: Color
+  ) {
     this.boardState = boardState || this.getInitialPieces();
     this.fallenPieces = fallenPieces || [];
+    this.playerTurn = playerTurn || Color.WHITE;
+  }
+
+  togglePlayerTurn() {
+    this.playerTurn =
+      this.playerTurn === Color.WHITE ? Color.BLACK : Color.WHITE;
   }
 
   getInitialPieces() {
@@ -91,6 +102,6 @@ export class Board {
     });
 
     const fallenPieces = this.fallenPieces.map((piece) => piece.clone());
-    return new Board(boardState, fallenPieces);
+    return new Board(boardState, fallenPieces, this.playerTurn);
   }
 }

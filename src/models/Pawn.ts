@@ -13,6 +13,7 @@ export class Pawn extends Piece {
   }
 
   isValidMove(destination: Position, board: Board): boolean {
+    if (this.color !== board.playerTurn) return false;
     this.updatePossibleMoves(board);
     for (const move of this.possibleMoves) {
       if (move.x === destination.x && move.y === destination.y) {
@@ -24,6 +25,7 @@ export class Pawn extends Piece {
 
   updatePossibleMoves(board: Board): void {
     this.possibleMoves = [];
+    if (this.color !== board.playerTurn) return;
     const specialRow = this.color === Color.WHITE ? 1 : 6;
     const pawnDirection = this.color === Color.WHITE ? 1 : -1;
 

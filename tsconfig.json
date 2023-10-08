@@ -11,6 +11,7 @@
       "@helpers/*": ["helpers/*"],
       "@components/*": ["src/components/*"],
       "@models/*": ["src/models/*"],
+      "@contexts/*": ["src/contexts/*"],
     },
 
     /* Bundler mode */
