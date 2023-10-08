@@ -18,6 +18,11 @@ export abstract class Piece {
     this.possibleMoves = possibleMoves;
   }
 
+  getPossibleMoves(board: Board): Position[] {
+    this.updatePossibleMoves(board);
+    return this.possibleMoves;
+  }
+
   abstract isValidMove(destination: Position, board: Board): boolean;
   abstract updatePossibleMoves(board: Board): void;
   abstract clone(): Piece;

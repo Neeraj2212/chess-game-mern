@@ -14,6 +14,7 @@ const Chessboard = () => {
     x: -1,
     y: -1,
   });
+  const [possibleMoves, setPossibleMoves] = useState<Position[]>([]);
 
   const { board, setBoard } = useContext(GameContext);
   const boardElements = [];
@@ -23,8 +24,18 @@ const Chessboard = () => {
     for (let i = 0; i <= 7; i++) {
       const piece = board.getPieceAt({ x: i, y: j });
       const image = piece ? piece.image : undefined;
+      const withinReachOfActivePiece = possibleMoves.some(
+        (pos) => pos.x === i && pos.y === j
+      );
+      const hasEnemyPiece = piece && piece.color !== board.playerTurn;
       boardElements.push(
-        <Tile key={`${i}-${j}`} number={i + j} image={image} />
+        <Tile
+          key={`${i}-${j}`}
+          number={i + j}
+          image={image}
+          withinReachOfActivePiece={withinReachOfActivePiece}
+          hasEnemyPiece={hasEnemyPiece}
+        />
       );
     }
 
@@ -88,8 +99,16 @@ const Chessboard = () => {
   const grabPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const grabbedElement = e.target as HTMLDivElement;
     if (!grabbedElement.classList.contains("chess-piece")) return;
-    setActivePiecePos(calculateCurrentPos(e.pageX, e.pageY));
+    const currentPiecePos = calculateCurrentPos(e.pageX, e.pageY);
+    setActivePiecePos(currentPiecePos);
     setActiveChessPiece(grabbedElement);
+    const currentPiece = board.getPieceAt(currentPiecePos);
+
+    if (currentPiece) {
+      const possibleMoves = currentPiece.getPossibleMoves(board);
+      console.log(possibleMoves);
+      setPossibleMoves(possibleMoves);
+    }
 
     updateChessPieceLocation(grabbedElement, e.pageX, e.pageY);
   };
@@ -120,6 +139,7 @@ const Chessboard = () => {
       }
     }
 
+    setPossibleMoves([]);
     setActivePiecePos({ x: -1, y: -1 });
     setActiveChessPiece(null);
   };
