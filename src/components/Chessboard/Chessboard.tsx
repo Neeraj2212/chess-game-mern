@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { GRID_CENTER, GRID_SIZE, Position } from "../../../helper/Constants";
-import { intialChessPieces } from "../../../helper/Utils";
+import { GRID_CENTER, GRID_SIZE, Position } from "../../../helpers/Constants";
+import { intialChessPieces } from "../../../helpers/Utils";
 import Arbiter from "../../arbiter/Arbiter";
 import Tile from "../Tile/Tile";
 import "./Chessboard.css";

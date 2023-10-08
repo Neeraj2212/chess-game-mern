@@ -1,4 +1,4 @@
-import { Color, Piece, PieceType, Position } from "../../helper/Constants";
+import { Color, Piece, PieceType, Position } from "../../helpers/Constants";
 
 export default class Arbiter {
   isTileOccupied(pos: Position, boardState: Piece[]): boolean {
