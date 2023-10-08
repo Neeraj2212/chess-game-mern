@@ -1,6 +1,7 @@
 .fallen-pieces-block {
   place-self: baseline;
   margin: 0 2rem;
+  width: 100%;
 }
 
 .fallen-pieces-block > h2 {
@@ -11,6 +12,7 @@
 .fallen-pieces-rack {
   display: grid;
   border: 2px solid white;
+  min-height: 66px;
   grid-template-columns: repeat(10, 1fr);
 }
 

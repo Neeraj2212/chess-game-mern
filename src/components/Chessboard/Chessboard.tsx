@@ -6,6 +6,7 @@ import "./Chessboard.css";
 
 const Chessboard = () => {
   const chessboardRef = useRef<HTMLDivElement>(null);
+  const chessboardWrapperRef = useRef<HTMLDivElement>(null);
   // Active chess piece info
   const [activeChessPiece, setActiveChessPiece] = useState<HTMLElement | null>(
     null
@@ -45,51 +46,61 @@ const Chessboard = () => {
     posY: number
   ) => {
     const chessboard = chessboardRef.current;
+    const chessboardWrapper = chessboardWrapperRef.current;
 
-    if (chessboard && element && element.classList.contains("chess-piece")) {
-      const minX = chessboard.offsetLeft - 25; // To Handle piece around edges
-      const minY = chessboard.offsetTop - 25;
-      const maxX = chessboard.offsetLeft + chessboard.clientWidth - 75;
-      const maxY = chessboard.offsetTop + chessboard.clientHeight - 80;
+    if (
+      chessboard &&
+      chessboardWrapper &&
+      element &&
+      element.classList.contains("chess-piece")
+    ) {
+      const minX = -30; // To Handle piece around edges
+      const minY = -30;
+      const maxX = chessboard.clientWidth - 75;
+      const maxY = chessboard.clientHeight - 80;
 
-      const mousePositionX = posX - GRID_CENTER; // To make it relative to center
-      const mousePostionY = posY - GRID_CENTER; // To make it relative to center
+      const pieceLeftPosition =
+        posX - GRID_CENTER - chessboardWrapper.offsetLeft; // To make it relative to center
+      const pieceTopPosition = posY - GRID_CENTER - chessboardWrapper.offsetTop; // To make it relative to center
 
       element.style.position = "absolute";
       element.style.zIndex = "10";
 
       // Check if the piece is being dragged outside the chessboard
       if (
-        mousePositionX < minX ||
-        mousePositionX > maxX ||
-        mousePostionY < minY ||
-        mousePostionY > maxY
+        pieceLeftPosition < minX ||
+        pieceLeftPosition > maxX ||
+        pieceTopPosition < minY ||
+        pieceTopPosition > maxY
       ) {
         // Trigger mouse up event to drop piece to its original location
-        setActiveChessPiece(null);
+        console.log("bahar gya");
         const event = new MouseEvent("mouseup", {
           view: window,
           bubbles: true,
           cancelable: true,
         });
         chessboard.dispatchEvent(event);
+        setActiveChessPiece(null);
 
         return;
       }
 
-      element.style.top = `${mousePostionY}px`;
-      element.style.left = `${mousePositionX}px`;
+      element.style.top = `${pieceTopPosition}px`;
+      element.style.left = `${pieceLeftPosition}px`;
     }
   };
 
   // Function to calculate co-ordinates of mouse pointers
   const calculateCurrentPos = (mouseX: number, mouseY: number): Position => {
-    const chessboard = chessboardRef.current;
+    const chessboardWrapper = chessboardWrapperRef.current;
 
-    if (chessboard) {
-      const x = Math.floor((mouseX - chessboard?.offsetLeft) / GRID_SIZE);
+    if (chessboardWrapper) {
+      const x = Math.floor(
+        (mouseX - chessboardWrapper?.offsetLeft) / GRID_SIZE
+      );
       const y = Math.abs(
-        Math.ceil((mouseY - chessboard.offsetTop - 800) / GRID_SIZE)
+        Math.ceil((mouseY - chessboardWrapper.offsetTop - 800) / GRID_SIZE)
       );
       return { x, y };
     }
@@ -106,7 +117,6 @@ const Chessboard = () => {
 
     if (currentPiece) {
       const possibleMoves = currentPiece.getPossibleMoves(board);
-      console.log(possibleMoves);
       setPossibleMoves(possibleMoves);
     }
 
@@ -120,6 +130,7 @@ const Chessboard = () => {
 
   const dropPiece = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     activeChessPiece?.style.removeProperty("z-index");
+    console.log("Mouse choda");
 
     const destPos = calculateCurrentPos(e.pageX, e.pageY);
     const currentPiece = board.getPieceAt(activePiecePos);
@@ -145,7 +156,7 @@ const Chessboard = () => {
   };
 
   return (
-    <div className="chessboard-wrapper">
+    <div className="chessboard-wrapper" ref={chessboardWrapperRef}>
       <div
         onMouseUp={(e) => dropPiece(e)}
         onMouseMove={(e) => {
