@@ -1,0 +1,32 @@
+.show-turn {
+  display: grid;
+  height: 100%;
+  margin-top: 100px;
+}
+
+.show-turn .wrapper {
+  place-self: start;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.turn-tile .chess-piece {
+  place-self: start;
+  width: 100px;
+  height: 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 80px;
+}
+
+.turn-tile.white-tile {
+  background-color: #eed3ac;
+  user-select: none;
+}
+
+.turn-tile.black-tile {
+  background-color: #ac7d58;
+  user-select: none;
+}

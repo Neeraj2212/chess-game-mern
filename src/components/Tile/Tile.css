@@ -1,9 +1,19 @@
+.tile {
+  width: 100px;
+  height: 100px;
+  display: grid;
+  place-content: center;
+  border: 1px solid black;
+}
+
 .tile .chess-piece {
   width: 100px;
   height: 100px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 80px;
+  display: grid;
+  place-content: center;
 }
 
 .tile .chess-piece:hover {
@@ -16,8 +26,27 @@
 
 .tile.white-tile {
   background-color: #eed3ac;
+  user-select: none;
 }
 
 .tile.black-tile {
   background-color: #ac7d58;
+  user-select: none;
+}
+
+.tile.within-reach::before {
+  content: " ";
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.tile.enemy-in-reach-piece::before {
+  position: absolute;
+  content: " ";
+  width: 90px;
+  height: 90px;
+  border: 5px solid rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
 }
