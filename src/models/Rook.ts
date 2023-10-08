@@ -1,5 +1,6 @@
 import { PieceType, Position, Color } from "@helpers/Constants";
 import { Piece } from "./Piece";
+import { Board } from "./Board";
 
 export class Rook extends Piece {
   image: string;
@@ -11,12 +12,43 @@ export class Rook extends Piece {
     this.image = `assets/images/rook_${color}.png`;
   }
 
-  isValidMove(destination: Position): boolean {
-    return true;
+  isValidMove(destination: Position, board: Board): boolean {
+    this.updatePossibleMoves(board);
+    for (const move of this.possibleMoves) {
+      if (move.x === destination.x && move.y === destination.y) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  updatePossibleMoves(): void {
-    return;
+  updatePossibleMoves(board: Board): void {
+    this.possibleMoves = [];
+    const directions = [
+      { x: 0, y: 1 },
+      { x: 0, y: -1 },
+      { x: 1, y: 0 },
+      { x: -1, y: 0 },
+    ];
+    for (const direction of directions) {
+      let nextPosition = {
+        x: this.position.x + direction.x,
+        y: this.position.y + direction.y,
+      };
+      while (board.isTileValid(nextPosition)) {
+        if (board.isTileOccupied(nextPosition)) {
+          if (board.getPieceAt(nextPosition)?.color !== this.color) {
+            this.possibleMoves.push(nextPosition);
+          }
+          break;
+        }
+        this.possibleMoves.push(nextPosition);
+        nextPosition = {
+          x: nextPosition.x + direction.x,
+          y: nextPosition.y + direction.y,
+        };
+      }
+    }
   }
 
   clone(): Piece {

@@ -75,6 +75,10 @@ export class Board {
     return !!piece && piece.color !== pieceColor;
   }
 
+  isTileValid(pos: Position): boolean {
+    return pos.x >= 0 && pos.x < 8 && pos.y >= 0 && pos.y < 8;
+  }
+
   clone(): Board {
     const boardState = this.boardState.map((row) => {
       return row.map((piece) => {
