@@ -13,7 +13,7 @@ const Turn = () => {
   return (
     <div className="show-turn">
       <div className="wrapper">
-        <h2>Active Player</h2>
+        <span>Active Player</span>
         <div className={`turn-tile ${tileClass}`}>
           <div
             style={{ backgroundImage: `url(${image})` }}

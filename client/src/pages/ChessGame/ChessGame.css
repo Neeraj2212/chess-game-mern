@@ -1,14 +1,10 @@
 .chess-game {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: auto 1fr;
-  place-items: center;
-  margin: 50px 5%;
-  column-gap: 4rem;
+  grid-template-columns: min-content 500px;
+  column-gap: 2rem;
   row-gap: 40px;
 }
 
 .chessboard-wrapper {
-  grid-row: span 2;
   position: relative;
 }

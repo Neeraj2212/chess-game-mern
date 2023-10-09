@@ -9,7 +9,6 @@ import { UserContext } from "./contexts/UserContext";
 
 function App() {
   const { user } = useContext(UserContext);
-  console.log(user);
 
   return (
     <div id="app">

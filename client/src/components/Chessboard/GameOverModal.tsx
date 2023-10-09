@@ -6,11 +6,10 @@ import { Color } from "@helpers/Constants";
 interface GameOverModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  onNewGame: () => void;
 }
 
-const GameOverModal = ({ show, setShow, onNewGame }: GameOverModalProps) => {
-  const { board } = useContext(GameContext);
+const GameOverModal = ({ show, setShow }: GameOverModalProps) => {
+  const { board, startNewGame } = useContext(GameContext);
 
   const winner = board.playerTurn === Color.BLACK ? "Black" : "White";
   const winnerKingImage = `assets/images/king_${board.playerTurn}.png`;
@@ -21,7 +20,7 @@ const GameOverModal = ({ show, setShow, onNewGame }: GameOverModalProps) => {
       <h2>{winner} Won</h2>
       <button
         onClick={() => {
-          onNewGame();
+          startNewGame();
           setShow(false);
         }}
         className="new-game-button"

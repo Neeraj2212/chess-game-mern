@@ -5,20 +5,26 @@
 }
 
 .show-turn .wrapper {
+  border: 2px solid #302e2b;
+  padding: 1.5rem;
   width: 100%;
   place-self: start;
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  gap: 2rem;
   align-items: center;
 }
 
+.show-turn .wrapper > span {
+  font-size: 1.5rem;
+}
+
 .turn-tile .chess-piece {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 80px;
+  background-size: 50px;
 }
 
 .turn-tile.white-tile {

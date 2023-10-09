@@ -1,14 +1,16 @@
-import "./ChessGame.css";
 import Chessboard from "@components/Chessboard/Chessboard";
-import Turn from "@components/Turn/Turn";
-import FallenPiecesRack from "@components/FallenPiecesRack/FallenPiecesRack";
+import GameOptionsBoard from "@src/components/GameOptionsBoard/GameOptionsBoard";
+import Header from "@src/components/Header/Header";
+import "./ChessGame.css";
 
 const ChessGame = () => {
   return (
-    <div className="chess-game">
-      <Chessboard />
-      <Turn />
-      <FallenPiecesRack />
+    <div className="chess-game-page">
+      <Header />
+      <div className="chess-game">
+        <Chessboard />
+        <GameOptionsBoard />
+      </div>
     </div>
   );
 };

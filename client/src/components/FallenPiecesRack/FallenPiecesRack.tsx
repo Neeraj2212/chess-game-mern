@@ -7,7 +7,7 @@ const FallenPiecesRack = () => {
 
   return (
     <div className="fallen-pieces-block">
-      <h2>Fallen Pieces</h2>
+      <span>Fallen Pieces</span>
       <div className="fallen-pieces-rack">
         {board.fallenPieces.map((piece, index) => {
           return <img key={index} src={piece.image} alt={piece.type} />;

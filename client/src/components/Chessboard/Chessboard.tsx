@@ -11,6 +11,7 @@ import "./Chessboard.css";
 import PawnPromotionModal from "./PawnPromotionModal";
 import { Pawn } from "@src/models/Pawn";
 import GameOverModal from "./GameOverModal";
+import StartNewGameModal from "./StartNewGameModal";
 
 const Chessboard = () => {
   const chessboardRef = useRef<HTMLDivElement>(null);
@@ -25,7 +26,6 @@ const Chessboard = () => {
   });
 
   const { board, setBoard } = useContext(GameContext);
-  console.log(board);
   const [possibleMoves, setPossibleMoves] = useState<Position[]>([]);
 
   // Destination position to pass on to the modal
@@ -196,12 +196,6 @@ const Chessboard = () => {
     }
   };
 
-  const onNewGame = () => {
-    const newBoard = board.clone();
-    newBoard.resetBoard();
-    setBoard(newBoard);
-  };
-
   return (
     <div className="chessboard-wrapper" ref={chessboardWrapperRef}>
       <PawnPromotionModal
@@ -209,11 +203,8 @@ const Chessboard = () => {
         setShow={setShowPawnPromotionModal}
         onPawnPromotion={onPawnPromotion}
       />
-      <GameOverModal
-        show={showGameOverModal}
-        setShow={setShowGameOverModal}
-        onNewGame={onNewGame}
-      />
+      <GameOverModal show={showGameOverModal} setShow={setShowGameOverModal} />
+      <StartNewGameModal />
       <div
         onMouseUp={(e) => dropPiece(e)}
         onMouseMove={(e) => {

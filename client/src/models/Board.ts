@@ -9,15 +9,18 @@ import { Queen } from "./Queen";
 import { Rook } from "./Rook";
 
 export class Board {
+  gameId: string;
   boardState: BoardState;
   fallenPieces: Piece[] = [];
   playerTurn: Color = Color.WHITE;
 
   constructor(
+    gameId?: string,
     boardState?: BoardState,
     fallenPieces?: Piece[],
     playerTurn?: Color
   ) {
+    this.gameId = gameId || "";
     this.boardState = boardState || this.getInitialPieces();
     this.fallenPieces = fallenPieces || [];
     this.playerTurn = playerTurn || Color.WHITE;
@@ -144,6 +147,6 @@ export class Board {
     });
 
     const fallenPieces = this.fallenPieces.map((piece) => piece.clone());
-    return new Board(boardState, fallenPieces, this.playerTurn);
+    return new Board(this.gameId, boardState, fallenPieces, this.playerTurn);
   }
 }
