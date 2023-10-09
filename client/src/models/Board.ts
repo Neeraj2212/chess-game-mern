@@ -1,5 +1,5 @@
 import { BoardState, PieceType } from "@helpers/Constants";
-import { Color, Position } from "../../helpers/Constants";
+import { Color, Position } from "@helpers/Constants";
 import { Bishop } from "./Bishop";
 import { King } from "./King";
 import { Knight } from "./Knight";
@@ -29,7 +29,6 @@ export class Board {
   }
 
   promotePawn(piece: Piece, type: PieceType) {
-    console.log("Promoting pawn");
     const position = piece.position;
     const color = piece.color;
     const newPiece = this.createPieceByType(type, position, color);

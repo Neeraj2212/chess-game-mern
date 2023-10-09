@@ -25,6 +25,7 @@ const Chessboard = () => {
   });
 
   const { board, setBoard } = useContext(GameContext);
+  console.log(board);
   const [possibleMoves, setPossibleMoves] = useState<Position[]>([]);
 
   // Destination position to pass on to the modal

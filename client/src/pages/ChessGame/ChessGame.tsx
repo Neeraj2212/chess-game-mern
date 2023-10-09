@@ -1,7 +1,7 @@
 import "./ChessGame.css";
-import Chessboard from "../Chessboard/Chessboard";
-import Turn from "../Turn/Turn";
-import FallenPiecesRack from "../FallenPiecesRack/FallenPiecesRack";
+import Chessboard from "@components/Chessboard/Chessboard";
+import Turn from "@components/Turn/Turn";
+import FallenPiecesRack from "@components/FallenPiecesRack/FallenPiecesRack";
 
 const ChessGame = () => {
   return (

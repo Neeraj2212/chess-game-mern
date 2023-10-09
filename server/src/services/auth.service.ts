@@ -20,6 +20,7 @@ class AuthService {
     const hashedPassword = await hash(userData.password, 10);
     const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
 
+    createUserData.password = undefined;
     return createUserData;
   }
 

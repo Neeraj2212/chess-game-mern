@@ -3,6 +3,7 @@
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["node","vite/client"],
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": "./",
@@ -12,6 +13,7 @@
       "@components/*": ["src/components/*"],
       "@models/*": ["src/models/*"],
       "@contexts/*": ["src/contexts/*"],
+      "@pages/*" : ["src/pages/*"],
     },
 
     /* Bundler mode */
