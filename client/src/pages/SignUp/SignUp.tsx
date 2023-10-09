@@ -1,13 +1,18 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import "./SignUp.css";
+import { UserContext } from "@src/contexts/UserContext";
 import axios from "axios";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./SignUp.css";
 
 const SignUp = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
+  const { updateUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  // Handle sign up and redirect to game page
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -19,12 +24,13 @@ const SignUp = () => {
       .catch((error) => {
         toast.error(error.response.data.message);
       });
-    console.log(response);
 
     if (response && response.data) {
       toast.success("Account created successfully!");
       setUserName("");
       setPassword("");
+      updateUser(response.data.data);
+      navigate("/game");
     }
   };
   return (

@@ -19,6 +19,11 @@ export enum Color {
   WHITE = "w",
 }
 
+export interface User {
+  _id: string;
+  userName: string;
+}
+
 export type BoardState = (Piece | undefined)[][];
 
 // CONSTANTS

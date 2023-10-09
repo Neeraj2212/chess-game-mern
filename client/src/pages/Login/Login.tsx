@@ -1,13 +1,18 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { UserContext } from "@src/contexts/UserContext";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
+  const { updateUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  // Handle login and redirect to game page
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -19,12 +24,13 @@ const Login = () => {
       .catch((error) => {
         toast.error(error.response.data.message);
       });
-    console.log(response);
 
     if (response && response.data) {
       toast.success("Logged in successfully!");
       setUserName("");
       setPassword("");
+      updateUser(response.data.data);
+      navigate("/game");
     }
   };
 
