@@ -7,7 +7,8 @@
   grid-template-rows: repeat(8, 100px);
 }
 
-.pawn-promotion-modal {
+.pawn-promotion-modal,
+.game-over-modal {
   position: absolute;
   display: grid;
   place-content: center;
@@ -16,7 +17,8 @@
   z-index: 20;
 }
 
-.pawn-promotion-modal .modal-inner {
+.pawn-promotion-modal .modal-inner,
+.game-over-modal .modal-inner {
   width: 802px;
   height: 300px;
   display: flex;
@@ -32,4 +34,15 @@
 .pawn-promotion-modal .pieces img:hover {
   cursor: pointer;
   translate: 0 -5px;
+}
+
+.new-game-button {
+  background-color: #ac7d58;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 5px 10px;
+  color: #000;
+  font-size: large;
+  cursor: pointer;
+  font-weight: bold;
 }

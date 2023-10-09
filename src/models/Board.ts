@@ -75,6 +75,19 @@ export class Board {
     return this.boardState[position.x][position.y];
   }
 
+  isGameOver(): boolean {
+    const kings = this.fallenPieces.filter((piece) => {
+      return piece instanceof King;
+    });
+    return kings.length > 0;
+  }
+
+  resetBoard() {
+    this.boardState = this.getInitialPieces();
+    this.fallenPieces = [];
+    this.playerTurn = Color.WHITE;
+  }
+
   movePiece(src: Position, dest: Position) {
     const piece = this.getPieceAt(src);
     const destPiece = this.getPieceAt(dest);

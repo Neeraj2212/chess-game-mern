@@ -10,6 +10,7 @@ import { useContext, useRef, useState } from "react";
 import "./Chessboard.css";
 import PawnPromotionModal from "./PawnPromotionModal";
 import { Pawn } from "@src/models/Pawn";
+import GameOverModal from "./GameOverModal";
 
 const Chessboard = () => {
   const chessboardRef = useRef<HTMLDivElement>(null);
@@ -30,6 +31,9 @@ const Chessboard = () => {
   const [showPawnPromotionModal, setShowPawnPromotionModal] = useState(false);
   const [promotionPiecePosition, setPromotionPiecePosition] =
     useState<Position>({ x: -1, y: -1 });
+
+  // Show controls for game over modal
+  const [showGameOverModal, setShowGameOverModal] = useState(false);
 
   // Inititalize board with pieces
   const boardElements = [];
@@ -151,6 +155,11 @@ const Chessboard = () => {
 
       if (isValidMove) {
         board.movePiece(activePiecePos, destPos);
+        if (board.isGameOver()) {
+          cleanUp();
+          setShowGameOverModal(true);
+          return;
+        }
         if (board.isPawnPromotionAllowed(currentPiece, destPos)) {
           cleanUp();
           setPromotionPiecePosition(destPos);
@@ -186,12 +195,23 @@ const Chessboard = () => {
     }
   };
 
+  const onNewGame = () => {
+    const newBoard = board.clone();
+    newBoard.resetBoard();
+    setBoard(newBoard);
+  };
+
   return (
     <div className="chessboard-wrapper" ref={chessboardWrapperRef}>
       <PawnPromotionModal
         show={showPawnPromotionModal}
         setShow={setShowPawnPromotionModal}
         onPawnPromotion={onPawnPromotion}
+      />
+      <GameOverModal
+        show={showGameOverModal}
+        setShow={setShowGameOverModal}
+        onNewGame={onNewGame}
       />
       <div
         onMouseUp={(e) => dropPiece(e)}
