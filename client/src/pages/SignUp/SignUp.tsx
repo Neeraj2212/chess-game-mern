@@ -30,7 +30,7 @@ const SignUp = () => {
   return (
     <div className="sign-up-page">
       <form onSubmit={(e) => handleSignUp(e)} className="sign-up-form">
-        <h1>Create Account</h1>
+        <h1>Sign Up</h1>
         <div>
           <label htmlFor="username">Username:</label>
           <input
@@ -53,8 +53,11 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Link to="/login">Already have an account?</Link>
+
         <button type="submit">Sign Up</button>
+        <p>
+          Already have an account? <Link to="/login">Log In</Link>
+        </p>
       </form>
     </div>
   );

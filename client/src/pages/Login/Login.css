@@ -1,11 +1,11 @@
-.sign-up-page {
+.login-page {
   height: 100vh;
   background-image: url("assets/images/landing-page.png");
   background-position: center;
   background-repeat: no-repeat;
 }
 
-.sign-up-form {
+.login-form {
   display: grid;
   place-content: center;
   /* border: 2px solid white; */
@@ -15,23 +15,23 @@
   max-width: 600px;
 }
 
-.sign-up-form h1 {
+.login-form h1 {
   font-size: 2rem;
   margin-bottom: 20px;
 }
 
-.sign-up-form div {
+.login-form div {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-.sign-up-form label {
+.login-form label {
   font-size: 1.2rem;
   margin-bottom: 5px;
 }
 
-.sign-up-form input {
+.login-form input {
   padding: 10px;
   font-size: 1.2rem;
   border-radius: 5px;
@@ -39,7 +39,8 @@
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
-.sign-up-form button {
+.login-form button {
+  margin-top: 5px;
   width: 100%;
   padding: 10px;
   font-size: 1.2rem;
@@ -51,20 +52,20 @@
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
 
-.sign-up-form button:hover {
+.login-form button:hover {
   background-color: #005ae6;
 }
 
-.sign-up-form p {
+.login-form p {
   margin-top: 20px;
   font-size: 1.2rem;
 }
 
-.sign-up-form p a {
+.login-form p a {
   color: #0077ff;
   text-decoration: none;
 }
 
-.sign-up-form p a:hover {
+.login-form p a:hover {
   text-decoration: underline;
 }
