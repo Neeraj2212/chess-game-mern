@@ -6,20 +6,20 @@ import { isEmpty } from 'class-validator';
 class GameService {
   public games = gameModel;
 
-  public async createGame(gameData: CreateOrUpdateGameDto) {
+  public async createGame(gameData: CreateOrUpdateGameDto, userId: string) {
     if (isEmpty(gameData)) throw new HttpException(400, 'gameData is empty');
 
-    const findGame = await this.games.findOne({ gameId: gameData.gameId });
+    const findGame = await this.games.findOne({ gameId: gameData.gameId, userId: userId });
     if (findGame) throw new HttpException(409, `This game ${gameData.gameId} already exists`);
 
-    const createGameData = await this.games.create(gameData);
+    const createGameData = await this.games.create({ ...gameData, userId: userId });
     return createGameData;
   }
 
   public async getAllGamesOfUser(userId: string) {
     if (isEmpty(userId)) throw new HttpException(400, 'userId is empty');
 
-    const findGames = await this.games.find({ userId: userId });
+    const findGames = await this.games.find({ userId: userId }).select('gameId');
     return findGames;
   }
 
@@ -27,6 +27,7 @@ class GameService {
     if (isEmpty(id)) throw new HttpException(400, 'gameId is empty');
 
     const findGame = await this.games.findById(id);
+    if (!findGame) throw new HttpException(404, `This game does not exist`);
     return findGame;
   }
 
@@ -43,7 +44,7 @@ class GameService {
     if (isEmpty(id)) throw new HttpException(400, 'gameId is empty');
 
     const deleteGameById = await this.games.findByIdAndDelete(id);
-
+    if (!deleteGameById) throw new HttpException(404, `This game does not exist`);
     return deleteGameById;
   }
 }

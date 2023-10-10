@@ -13,7 +13,10 @@ const pieceSchema: Schema = new Schema({
     enum: ['w', 'b'],
   },
   position: {
-    type: String,
+    type: {
+      x: Number,
+      y: Number,
+    },
     required: true,
   },
 });
@@ -22,7 +25,6 @@ const gameSchema: Schema = new Schema({
   gameId: {
     type: String,
     required: true,
-    unique: true,
   },
   piecesOnBoard: {
     type: [pieceSchema],
@@ -39,9 +41,12 @@ const gameSchema: Schema = new Schema({
   },
   userId: {
     type: Schema.Types.ObjectId,
+    required: true,
     ref: 'User',
   },
 });
+
+gameSchema.index({ gameId: 1, userId: 1 }, { unique: true });
 
 const gameModel = model<Game & Document>('Game', gameSchema);
 

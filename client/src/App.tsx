@@ -6,9 +6,17 @@ import { GameProvider } from "./contexts/GameContext";
 import ChessGame from "./pages/ChessGame/ChessGame";
 import { useContext } from "react";
 import { UserContext } from "./contexts/UserContext";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 function App() {
   const { user } = useContext(UserContext);
+
+  if (Cookies.get("Authorization") && !user) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${Cookies.get(
+      "Authorization"
+    )}`;
+  }
 
   return (
     <div id="app">

@@ -28,7 +28,7 @@ class AuthService {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const findUser: User = await this.users.findOne({ userName: userData.userName });
-    if (!findUser) throw new HttpException(409, `This user name ${userData.userName} was not found`);
+    if (!findUser) throw new HttpException(404, `This user name ${userData.userName} was not found`);
 
     const isPasswordMatching: boolean = await compare(userData.password, findUser.password);
     if (!isPasswordMatching) throw new HttpException(409, 'Password is not matching');
@@ -43,7 +43,7 @@ class AuthService {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const findUser: User = await this.users.findOne({ userName: userData.userName, password: userData.password });
-    if (!findUser) throw new HttpException(409, `This user name ${userData.userName} was not found`);
+    if (!findUser) throw new HttpException(404, `This user name ${userData.userName} was not found`);
 
     return findUser;
   }

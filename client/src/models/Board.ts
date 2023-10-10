@@ -45,6 +45,13 @@ export class Board {
       piece.getCharacteristics()
     );
 
+    console.log({
+      gameId: this.gameId,
+      piecesOnBoard,
+      fallenPieces,
+      playerTurn: this.playerTurn,
+    });
+
     return {
       gameId: this.gameId,
       piecesOnBoard,

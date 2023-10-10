@@ -1,7 +1,10 @@
 export interface PieceCharacteristics {
   type: string;
   color: string;
-  position: string;
+  position: {
+    x: number;
+    y: number;
+  };
 }
 
 export interface Game {
