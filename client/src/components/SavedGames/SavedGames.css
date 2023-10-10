@@ -1,0 +1,53 @@
+.saved-games > span {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.saved-games {
+  overflow-y: auto;
+  height: 100%;
+}
+
+.saved-games-rack::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.saved-games-rack::-webkit-scrollbar-track {
+  background: #21201d;
+}
+
+.saved-games-rack .saved-game {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  width: 100%;
+  background-color: #21201d;
+  padding: 2rem 2rem;
+  margin-bottom: 1rem;
+}
+
+.saved-game .actions {
+  display: flex;
+  column-gap: 1rem;
+}
+
+.saved-game .actions button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #55361a;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.saved-game .actions .resume-btn:hover {
+  background-color: #6e4a1e;
+}
+
+.saved-game .actions .delete-btn {
+  background-color: #302e2b;
+}
+
+.saved-game .actions .delete-btn:hover {
+  background-color: #3d3b38;
+}

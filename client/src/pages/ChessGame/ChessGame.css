@@ -1,6 +1,7 @@
 .chess-game {
   display: grid;
   grid-template-columns: min-content 500px;
+  grid-template-rows: 800px;
   column-gap: 2rem;
   row-gap: 40px;
 }

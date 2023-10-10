@@ -1,22 +1,18 @@
 import Login from "@pages/Login/Login";
 import SignUp from "@pages/SignUp/SignUp";
+import { useContext } from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import { GameProvider } from "./contexts/GameContext";
-import ChessGame from "./pages/ChessGame/ChessGame";
-import { useContext } from "react";
 import { UserContext } from "./contexts/UserContext";
-import Cookies from "js-cookie";
+import ChessGame from "./pages/ChessGame/ChessGame";
 import axios from "axios";
 
 function App() {
   const { user } = useContext(UserContext);
 
-  if (Cookies.get("Authorization") && !user) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${Cookies.get(
-      "Authorization"
-    )}`;
-  }
+  // Axios config to send cookies with every request
+  axios.defaults.withCredentials = true;
 
   return (
     <div id="app">

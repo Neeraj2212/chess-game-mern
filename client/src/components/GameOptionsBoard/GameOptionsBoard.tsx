@@ -3,20 +3,20 @@ import FallenPiecesRack from "../FallenPiecesRack/FallenPiecesRack";
 import Turn from "../Turn/Turn";
 import "./GameOptionsBoard.css";
 import { GameContext } from "@src/contexts/GameContext";
+import { SavedGames } from "../SavedGames/SavedGames";
 
 enum VIEWS {
   GAME_STATS = "game-stats",
-  NEW_GAME = "new-game",
+  NEW_GAME = "new-game-options",
 }
 
 const GameOptionsBoard = () => {
   const [selectedView, setSelectedView] = useState(VIEWS.GAME_STATS);
-
-  const { board, startNewGame } = useContext(GameContext);
+  const { board, startNewGame, saveCurrentGame } = useContext(GameContext);
 
   return (
     <div className="game-options-board">
-      <div className="game-options">
+      <div className="game-options-tabs">
         <button
           className={`btn ${selectedView === VIEWS.GAME_STATS ? "active" : ""}`}
           onClick={() => setSelectedView(VIEWS.GAME_STATS)}
@@ -41,7 +41,7 @@ const GameOptionsBoard = () => {
         </div>
       )}
       {selectedView === VIEWS.NEW_GAME && (
-        <div className="new-game">
+        <div className="new-game-options">
           <button
             onClick={() => {
               startNewGame();
@@ -52,19 +52,14 @@ const GameOptionsBoard = () => {
           </button>
           <button
             onClick={() => {
-              board.saveGame();
+              saveCurrentGame();
             }}
             className="btn"
           >
             Save Game
           </button>
 
-          <div className="saved-games">
-            <span>Resume Saved Games</span>
-            {/* <div>
-            TODO: List of saved games and options to load them
-            </div> */}
-          </div>
+          <SavedGames />
         </div>
       )}
     </div>

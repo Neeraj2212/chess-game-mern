@@ -1,4 +1,9 @@
-import { BoardState, PieceType } from "@helpers/Constants";
+import {
+  BoardState,
+  PieceCharachteristics,
+  PieceType,
+  SavedGameState,
+} from "@helpers/Constants";
 import { Color, Position } from "@helpers/Constants";
 import { Bishop } from "./Bishop";
 import { King } from "./King";
@@ -34,27 +39,22 @@ export class Board {
     return this._fallenPieces;
   }
 
-  saveGame() {
+  saveGame(): SavedGameState {
     // Get basic characteristics of all pieces on board instead of board state to save space in db
     const piecesOnBoard = this._boardState
       .flat()
       .filter((piece) => !!piece)
-      .map((piece) => piece && piece.getCharacteristics());
+      .map(
+        (piece) => piece && piece.getCharacteristics()
+      ) as PieceCharachteristics[];
 
     const fallenPieces = this._fallenPieces.map((piece) =>
       piece.getCharacteristics()
     );
 
-    console.log({
-      gameId: this.gameId,
-      piecesOnBoard,
-      fallenPieces,
-      playerTurn: this.playerTurn,
-    });
-
     return {
       gameId: this.gameId,
-      piecesOnBoard,
+      piecesOnBoard: piecesOnBoard || [],
       fallenPieces,
       playerTurn: this.playerTurn,
     };

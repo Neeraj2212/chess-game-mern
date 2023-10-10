@@ -9,8 +9,7 @@ const StartNewGameModal = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateGameId(gameId);
-    setGameId("");
+    updateGameId(gameId, () => setGameId(""));
   };
 
   return (

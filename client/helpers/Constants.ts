@@ -24,6 +24,18 @@ export interface User {
   userName: string;
 }
 
+export interface SavedGame {
+  _id: string;
+  gameId: string;
+}
+
+export interface SavedGameState {
+  gameId: string;
+  piecesOnBoard: PieceCharachteristics[];
+  fallenPieces: PieceCharachteristics[];
+  playerTurn: Color;
+}
+
 export interface PieceCharachteristics {
   type: PieceType;
   color: Color;
