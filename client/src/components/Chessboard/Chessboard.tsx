@@ -25,7 +25,7 @@ const Chessboard = () => {
     y: -1,
   });
 
-  const { board, setBoard } = useContext(GameContext);
+  const { board, setBoard, deleteGameOnFinish } = useContext(GameContext);
   const [possibleMoves, setPossibleMoves] = useState<Position[]>([]);
 
   // Destination position to pass on to the modal
@@ -158,6 +158,7 @@ const Chessboard = () => {
         board.movePiece(activePiecePos, destPos);
         if (board.isGameOver()) {
           cleanUp();
+          deleteGameOnFinish();
           setShowGameOverModal(true);
           return;
         }

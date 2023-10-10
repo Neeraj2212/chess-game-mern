@@ -33,7 +33,6 @@ class GameService {
 
   public async updateGame(id: string, gameData: CreateOrUpdateGameDto) {
     if (isEmpty(gameData)) throw new HttpException(400, 'gameData is empty');
-
     const updateGameById = await this.games.findByIdAndUpdate(id, gameData);
     if (!updateGameById) throw new HttpException(404, `This game ${gameData.gameId} does not exist`);
 

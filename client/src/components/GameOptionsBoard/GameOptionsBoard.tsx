@@ -11,7 +11,7 @@ enum VIEWS {
 }
 
 const GameOptionsBoard = () => {
-  const [selectedView, setSelectedView] = useState(VIEWS.GAME_STATS);
+  const [selectedView, setSelectedView] = useState(VIEWS.NEW_GAME);
   const { board, startNewGame, saveCurrentGame } = useContext(GameContext);
 
   return (

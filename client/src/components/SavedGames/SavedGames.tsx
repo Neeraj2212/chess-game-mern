@@ -3,7 +3,7 @@ import "./SavedGames.css";
 import { useContext } from "react";
 
 export const SavedGames = () => {
-  const { savedGames } = useContext(GameContext);
+  const { savedGames, deleteSavedGame, loadGame } = useContext(GameContext);
 
   return (
     <>
@@ -12,12 +12,12 @@ export const SavedGames = () => {
         <div className="saved-games-rack">
           {savedGames.map((savedGame) => {
             return (
-              <div className="saved-game">
+              <div key={savedGame._id} className="saved-game">
                 <span>{savedGame.gameId}</span>
                 <div className="actions">
                   <button
                     onClick={() => {
-                      // board.loadGame(savedGame);
+                      loadGame(savedGame);
                     }}
                     className="resume-btn"
                   >
@@ -25,7 +25,7 @@ export const SavedGames = () => {
                   </button>
                   <button
                     onClick={() => {
-                      // board.deleteGame(savedGame);
+                      deleteSavedGame(savedGame);
                     }}
                     className="delete-btn"
                   >

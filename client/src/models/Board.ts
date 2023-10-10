@@ -60,6 +60,24 @@ export class Board {
     };
   }
 
+  loadGame(gameState: SavedGameState) {
+    this.gameId = gameState.gameId;
+    this.playerTurn = gameState.playerTurn;
+    this._fallenPieces = gameState.fallenPieces.map((piece) => {
+      return this.createPieceByType(piece.type, piece.position, piece.color);
+    });
+
+    this._boardState = this.initializeEmptyBoard();
+    gameState.piecesOnBoard.forEach((piece) => {
+      const newPiece = this.createPieceByType(
+        piece.type,
+        piece.position,
+        piece.color
+      );
+      this._boardState[piece.position.x][piece.position.y] = newPiece;
+    });
+  }
+
   isPawnPromotionAllowed(piece: Piece, dest: Position): boolean {
     const endRow = piece.color === Color.WHITE ? 7 : 0;
     return piece instanceof Pawn && dest.y === endRow;
@@ -77,7 +95,7 @@ export class Board {
       this.playerTurn === Color.WHITE ? Color.BLACK : Color.WHITE;
   }
 
-  getInitialPieces() {
+  private initializeEmptyBoard() {
     const state: BoardState = [];
     for (let i = 0; i < 8; i++) {
       state.push([]);
@@ -85,6 +103,11 @@ export class Board {
         state[i].push(undefined);
       }
     }
+    return state;
+  }
+
+  getInitialPieces() {
+    const state: BoardState = this.initializeEmptyBoard();
 
     for (let p = 0; p < 2; p++) {
       const color = p === 0 ? Color.BLACK : Color.WHITE;
