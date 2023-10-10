@@ -3,29 +3,14 @@ import { Piece } from "./Piece";
 import { Board } from "./Board";
 
 export class Knight extends Piece {
-  image: string;
-  type: PieceType;
-
   constructor(position: Position, color: Color) {
     super(position, color);
     this.type = PieceType.KNIGHT;
     this.image = `assets/images/knight_${color}.png`;
   }
 
-  isValidMove(destination: Position, board: Board): boolean {
-    if (this.color !== board.playerTurn) return false;
-
-    this.updatePossibleMoves(board);
-    for (const move of this.possibleMoves) {
-      if (move.x === destination.x && move.y === destination.y) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   updatePossibleMoves(board: Board): void {
-    this.possibleMoves = [];
+    const possibleMoves = [];
     if (this.color !== board.playerTurn) return;
     const directions = [
       { x: 1, y: 2 },
@@ -45,13 +30,15 @@ export class Knight extends Piece {
       if (board.isTileValid(nextPosition)) {
         if (board.isTileOccupied(nextPosition)) {
           if (board.getPieceAt(nextPosition)?.color !== this.color) {
-            this.possibleMoves.push(nextPosition);
+            possibleMoves.push(nextPosition);
           }
         } else {
-          this.possibleMoves.push(nextPosition);
+          possibleMoves.push(nextPosition);
         }
       }
     }
+
+    this.possibleMoves = possibleMoves;
   }
 
   clone(): Piece {

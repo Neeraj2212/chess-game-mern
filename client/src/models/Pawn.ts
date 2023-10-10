@@ -3,28 +3,14 @@ import { Piece } from "./Piece";
 import { Board } from "./Board";
 
 export class Pawn extends Piece {
-  image: string;
-  type: PieceType;
-
   constructor(position: Position, color: Color) {
     super(position, color);
     this.type = PieceType.PAWN;
     this.image = `assets/images/pawn_${color}.png`;
   }
 
-  isValidMove(destination: Position, board: Board): boolean {
-    if (this.color !== board.playerTurn) return false;
-    this.updatePossibleMoves(board);
-    for (const move of this.possibleMoves) {
-      if (move.x === destination.x && move.y === destination.y) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   updatePossibleMoves(board: Board): void {
-    this.possibleMoves = [];
+    const possibleMoves = [];
     if (this.color !== board.playerTurn) return;
     const specialRow = this.color === Color.WHITE ? 1 : 6;
     const pawnDirection = this.color === Color.WHITE ? 1 : -1;
@@ -42,7 +28,7 @@ export class Pawn extends Piece {
         y: this.position.y + pawnDirection,
       })
     ) {
-      this.possibleMoves.push({
+      possibleMoves.push({
         x: this.position.x,
         y: this.position.y + 2 * pawnDirection,
       });
@@ -54,7 +40,7 @@ export class Pawn extends Piece {
         y: this.position.y + pawnDirection,
       })
     ) {
-      this.possibleMoves.push({
+      possibleMoves.push({
         x: this.position.x,
         y: this.position.y + pawnDirection,
       });
@@ -71,7 +57,7 @@ export class Pawn extends Piece {
         this.color
       )
     ) {
-      this.possibleMoves.push({
+      possibleMoves.push({
         x: this.position.x - 1,
         y: this.position.y + pawnDirection,
       });
@@ -87,11 +73,13 @@ export class Pawn extends Piece {
         this.color
       )
     ) {
-      this.possibleMoves.push({
+      possibleMoves.push({
         x: this.position.x + 1,
         y: this.position.y + pawnDirection,
       });
     }
+
+    this.possibleMoves = possibleMoves;
   }
 
   clone(): Piece {

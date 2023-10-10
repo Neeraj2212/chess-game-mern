@@ -24,6 +24,12 @@ export interface User {
   userName: string;
 }
 
+export interface PieceCharachteristics {
+  type: PieceType;
+  color: Color;
+  position: Position;
+}
+
 export type BoardState = (Piece | undefined)[][];
 
 // CONSTANTS

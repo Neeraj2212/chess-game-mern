@@ -50,7 +50,12 @@ const GameOptionsBoard = () => {
           >
             Start New Game
           </button>
-          <button onClick={() => {}} className="btn">
+          <button
+            onClick={() => {
+              board.saveGame();
+            }}
+            className="btn"
+          >
             Save Game
           </button>
 

@@ -10,8 +10,8 @@ import { Rook } from "./Rook";
 
 export class Board {
   gameId: string;
-  boardState: BoardState;
-  fallenPieces: Piece[] = [];
+  private _boardState: BoardState;
+  private _fallenPieces: Piece[] = [];
   playerTurn: Color = Color.WHITE;
 
   constructor(
@@ -21,9 +21,36 @@ export class Board {
     playerTurn?: Color
   ) {
     this.gameId = gameId || "";
-    this.boardState = boardState || this.getInitialPieces();
-    this.fallenPieces = fallenPieces || [];
+    this._boardState = boardState || this.getInitialPieces();
+    this._fallenPieces = fallenPieces || [];
     this.playerTurn = playerTurn || Color.WHITE;
+  }
+
+  get boardState(): BoardState {
+    return this._boardState;
+  }
+
+  get fallenPieces(): Piece[] {
+    return this._fallenPieces;
+  }
+
+  saveGame() {
+    // Get basic characteristics of all pieces on board instead of board state to save space in db
+    const piecesOnBoard = this._boardState
+      .flat()
+      .filter((piece) => !!piece)
+      .map((piece) => piece && piece.getCharacteristics());
+
+    const fallenPieces = this._fallenPieces.map((piece) =>
+      piece.getCharacteristics()
+    );
+
+    return {
+      gameId: this.gameId,
+      piecesOnBoard,
+      fallenPieces,
+      playerTurn: this.playerTurn,
+    };
   }
 
   isPawnPromotionAllowed(piece: Piece, dest: Position): boolean {
@@ -35,7 +62,7 @@ export class Board {
     const position = piece.position;
     const color = piece.color;
     const newPiece = this.createPieceByType(type, position, color);
-    this.boardState[position.x][position.y] = newPiece;
+    this._boardState[position.x][position.y] = newPiece;
   }
 
   togglePlayerTurn() {
@@ -74,19 +101,21 @@ export class Board {
   }
 
   getPieceAt(position: Position): Piece | undefined {
-    return this.boardState[position.x][position.y];
+    return this.isTileValid(position)
+      ? this._boardState[position.x][position.y]
+      : undefined;
   }
 
   isGameOver(): boolean {
-    const kings = this.fallenPieces.filter((piece) => {
+    const kings = this._fallenPieces.filter((piece) => {
       return piece instanceof King;
     });
     return kings.length > 0;
   }
 
   resetBoard() {
-    this.boardState = this.getInitialPieces();
-    this.fallenPieces = [];
+    this._boardState = this.getInitialPieces();
+    this._fallenPieces = [];
     this.playerTurn = Color.WHITE;
   }
 
@@ -94,13 +123,14 @@ export class Board {
     const piece = this.getPieceAt(src);
     const destPiece = this.getPieceAt(dest);
     if (destPiece) {
-      this.fallenPieces.push(destPiece);
+      this._fallenPieces.push(destPiece);
     }
     if (!piece) {
       throw new Error("No piece found at source position");
     }
-    this.boardState[src.x][src.y] = undefined;
-    this.boardState[dest.x][dest.y] = piece;
+    this._boardState[src.x][src.y] = undefined;
+    this._boardState[dest.x][dest.y] = piece;
+
     piece.position = dest;
   }
 
@@ -136,7 +166,7 @@ export class Board {
   }
 
   clone(): Board {
-    const boardState = this.boardState.map((row) => {
+    const boardState = this._boardState.map((row) => {
       return row.map((piece) => {
         if (piece) {
           return piece.clone();
@@ -146,7 +176,7 @@ export class Board {
       });
     });
 
-    const fallenPieces = this.fallenPieces.map((piece) => piece.clone());
+    const fallenPieces = this._fallenPieces.map((piece) => piece.clone());
     return new Board(this.gameId, boardState, fallenPieces, this.playerTurn);
   }
 }
