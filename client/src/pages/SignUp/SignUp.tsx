@@ -1,6 +1,5 @@
-import { UserContext } from "@src/contexts/UserContext";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./SignUp.css";
@@ -9,10 +8,9 @@ const SignUp = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
-  const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Handle sign up and redirect to game page
+  // Handle sign up and redirect to login page
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -29,8 +27,7 @@ const SignUp = () => {
       toast.success("Account created successfully!");
       setUserName("");
       setPassword("");
-      updateUser(response.data.data);
-      navigate("/game");
+      navigate("/login");
     }
   };
   return (

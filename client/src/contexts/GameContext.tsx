@@ -39,6 +39,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [board, setBoard] = useState<Board>(new Board());
   const [openStartGameModal, setOpenStartGameModal] = useState(true);
   const [savedGames, setSavedGames] = useState<SavedGame[]>([]);
+  const [isGameFinished, setIsGameFinished] = useState(true);
 
   let dbGameId = localStorage.getItem("_gameId");
 
@@ -79,13 +80,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       setBoard(board);
       setOpenStartGameModal(false);
       fetchSavedGamesOfUser();
+      setIsGameFinished(false);
       cb && cb();
     }
   };
 
   const saveCurrentGame = async () => {
     // If Current Game is finished, don't save it
-    if (!board.gameId) {
+    if (isGameFinished) {
       toast.warn("You can't save a finished game!");
       return;
     }
@@ -119,16 +121,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("_gameId", gameData._id);
       setBoard(board);
       setOpenStartGameModal(false);
+      setIsGameFinished(false);
     }
   };
 
-  const deleteSavedGame = async (gameData: SavedGame) => {
-    // Check if deleting current game
-    if (gameData._id === dbGameId) {
-      toast.warn("You can't delete the current game!");
-      return;
-    }
-
+  const deleteGame = async (gameData: SavedGame, onFinish: boolean = false) => {
     // Delete Game progess in the database
     const response = await axios
       .delete(`/api/games/${gameData._id}`)
@@ -137,16 +134,28 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       });
 
     if (response && response.data) {
-      toast.success("Game deleted successfully!");
+      !onFinish && toast.success("Game deleted successfully!");
       fetchSavedGamesOfUser();
     }
   };
 
+  const deleteSavedGame = async (gameData: SavedGame) => {
+    // Check if game is in progress
+    if (gameData._id === dbGameId) {
+      toast.warn("You can't delete a game that is in progress!");
+      return;
+    }
+
+    // Delete Game from the database
+    deleteGame(gameData);
+  };
+
   // Remove current game from database after finishing it
   const deleteGameOnFinish = async () => {
-    deleteSavedGame({ _id: dbGameId!, gameId: board.gameId });
-    localStorage.removeItem("_gameId");
+    setIsGameFinished(true);
+    deleteGame({ _id: dbGameId!, gameId: board.gameId }, true);
     dbGameId = null;
+    localStorage.removeItem("_gameId");
     fetchSavedGamesOfUser();
   };
 
