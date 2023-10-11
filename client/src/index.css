@@ -20,6 +20,10 @@
   box-sizing: border-box;
 }
 
+button {
+  color: #ffffffde;
+}
+
 body {
   margin: 0;
   padding: 0;
