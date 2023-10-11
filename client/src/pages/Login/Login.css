@@ -1,6 +1,6 @@
 .login-page {
   height: 100vh;
-  background-image: url("assets/images/landing-page.png");
+  background-image: url("/assets/images/landing-page.png");
   background-position: center;
   background-repeat: no-repeat;
 }

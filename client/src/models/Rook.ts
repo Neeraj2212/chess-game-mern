@@ -6,7 +6,7 @@ export class Rook extends Piece {
   constructor(position: Position, color: Color) {
     super(position, color);
     this.type = PieceType.ROOK;
-    this.image = `assets/images/rook_${color}.png`;
+    this.image = `/assets/images/rook_${color}.png`;
   }
 
   updatePossibleMoves(board: Board): void {

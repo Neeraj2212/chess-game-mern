@@ -6,7 +6,7 @@ export class Pawn extends Piece {
   constructor(position: Position, color: Color) {
     super(position, color);
     this.type = PieceType.PAWN;
-    this.image = `assets/images/pawn_${color}.png`;
+    this.image = `/assets/images/pawn_${color}.png`;
   }
 
   updatePossibleMoves(board: Board): void {

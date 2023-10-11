@@ -5,7 +5,7 @@ import { GameContext } from "@src/contexts/GameContext";
 const Turn = () => {
   const { board } = useContext(GameContext);
 
-  const image = `assets/images/pawn_${board.playerTurn}.png`;
+  const image = `/assets/images/pawn_${board.playerTurn}.png`;
   const tileClass = `turn-tile ${
     board.playerTurn === "w" ? "white-tile" : "black-tile"
   }`;

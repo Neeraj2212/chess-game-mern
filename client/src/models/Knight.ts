@@ -6,7 +6,7 @@ export class Knight extends Piece {
   constructor(position: Position, color: Color) {
     super(position, color);
     this.type = PieceType.KNIGHT;
-    this.image = `assets/images/knight_${color}.png`;
+    this.image = `/assets/images/knight_${color}.png`;
   }
 
   updatePossibleMoves(board: Board): void {

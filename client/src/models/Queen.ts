@@ -6,7 +6,7 @@ export class Queen extends Piece {
   constructor(position: Position, color: Color) {
     super(position, color);
     this.type = PieceType.QUEEN;
-    this.image = `assets/images/queen_${color}.png`;
+    this.image = `/assets/images/queen_${color}.png`;
   }
 
   updatePossibleMoves(board: Board): void {

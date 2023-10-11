@@ -21,7 +21,7 @@ export abstract class Piece {
     this._position = position;
     this._color = color;
     this._possibleMoves = possibleMoves;
-    this._image = `assets/images/pawn_${color}.png`;
+    this._image = `/assets/images/pawn_${color}.png`;
     this._type = PieceType.PAWN;
   }
 

@@ -12,7 +12,7 @@ const GameOverModal = ({ show, setShow }: GameOverModalProps) => {
   const { board, startNewGame } = useContext(GameContext);
 
   const winner = board.playerTurn === Color.BLACK ? "Black" : "White";
-  const winnerKingImage = `assets/images/king_${board.playerTurn}.png`;
+  const winnerKingImage = `/assets/images/king_${board.playerTurn}.png`;
 
   return (
     <Modal show={show} className="game-over-modal">

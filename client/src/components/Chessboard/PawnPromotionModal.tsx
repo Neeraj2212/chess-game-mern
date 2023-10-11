@@ -30,7 +30,7 @@ const PawnPromotionModal = ({
         {availablePieces.map((pieceType, index) => {
           return (
             <img
-              src={`assets/images/${pieceType}_${board.playerTurn}.png`}
+              src={`/assets/images/${pieceType}_${board.playerTurn}.png`}
               alt={pieceType}
               key={index}
               onClick={() => {
