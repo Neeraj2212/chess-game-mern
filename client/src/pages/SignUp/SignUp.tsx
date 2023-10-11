@@ -13,6 +13,19 @@ const SignUp = () => {
   // Handle sign up and redirect to login page
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (userName.length < 3) {
+      toast.error("Username must be at least 3 characters long!");
+      return;
+    }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long!");
+      return;
+    }
+
+    if (userName.includes(" ")) {
+      toast.error("Username cannot contain spaces!");
+      return;
+    }
 
     const response = await axios
       .post("/api/auth/signup", {
