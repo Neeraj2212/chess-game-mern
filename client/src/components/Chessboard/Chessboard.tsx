@@ -25,16 +25,19 @@ const Chessboard = () => {
     y: -1,
   });
 
-  const { board, setBoard, deleteGameOnFinish } = useContext(GameContext);
+  const {
+    board,
+    setBoard,
+    deleteGameOnFinish,
+    showGameOverModal,
+    setShowGameOverModal,
+  } = useContext(GameContext);
   const [possibleMoves, setPossibleMoves] = useState<Position[]>([]);
 
   // Destination position to pass on to the modal
   const [showPawnPromotionModal, setShowPawnPromotionModal] = useState(false);
   const [promotionPiecePosition, setPromotionPiecePosition] =
     useState<Position>({ x: -1, y: -1 });
-
-  // Show controls for game over modal
-  const [showGameOverModal, setShowGameOverModal] = useState(false);
 
   // Inititalize board with pieces
   const boardElements = [];

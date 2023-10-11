@@ -8,6 +8,8 @@ type GameContextType = {
   board: Board;
   openStartGameModal: boolean;
   savedGames: SavedGame[];
+  showGameOverModal: boolean;
+  setShowGameOverModal: React.Dispatch<React.SetStateAction<boolean>>;
   setBoard: React.Dispatch<React.SetStateAction<Board>>;
   startNewGame: () => void;
   saveCurrentGame: () => void;
@@ -21,6 +23,8 @@ const initialContext: GameContextType = {
   board: new Board(),
   openStartGameModal: true,
   savedGames: [],
+  showGameOverModal: false,
+  setShowGameOverModal: () => {},
   setBoard: () => {},
   saveCurrentGame: () => {},
   startNewGame: () => {},
@@ -41,6 +45,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [savedGames, setSavedGames] = useState<SavedGame[]>([]);
   const [isGameFinished, setIsGameFinished] = useState(true);
 
+  // Show controls for game over modal
+  const [showGameOverModal, setShowGameOverModal] = useState(false);
+
   let dbGameId = localStorage.getItem("_gameId");
 
   const fetchSavedGamesOfUser = async () => {
@@ -59,6 +66,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const startNewGame = () => {
+    if (!isGameFinished) {
+      saveCurrentGame();
+    }
+    setShowGameOverModal(false);
     setOpenStartGameModal(true);
   };
 
@@ -79,6 +90,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("_gameId", response.data.data._id);
       setBoard(board);
       setOpenStartGameModal(false);
+      setShowGameOverModal(false);
       fetchSavedGamesOfUser();
       setIsGameFinished(false);
       cb && cb();
@@ -121,6 +133,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("_gameId", gameData._id);
       setBoard(board);
       setOpenStartGameModal(false);
+      setShowGameOverModal(false);
       setIsGameFinished(false);
     }
   };
@@ -165,6 +178,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         board,
         openStartGameModal,
         savedGames,
+        showGameOverModal,
+        setShowGameOverModal,
         deleteGameOnFinish,
         setBoard,
         startNewGame,
