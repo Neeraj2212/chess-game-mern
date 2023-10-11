@@ -54,7 +54,6 @@
     "node-gyp": "^9.1.0",
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
-    "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.7.0",
     "tsconfig-paths": "^4.0.0",
@@ -65,12 +64,6 @@
     "Express",
     "ExpressJS",
     "express.js",
-    "mongoose",
-    "typescript express",
-    "typescript express mongoose",
-    "starter",
-    "boilerplate",
-    "typescript express mongooses tarter",
-    "typescript-express-mongooses-tarter"
+    "mongoose"
   ]
 }
