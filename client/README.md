@@ -1,27 +1,65 @@
-# React + TypeScript + Vite
+### Chess Game Client
+This is the client-side code for the Chess Game web application. It is built using React and TypeScript.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Folder Structure
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+```
+client
+├── helpers
+│   ├── Constants.ts
+│   └── Utils.ts
+├── index.html
+├── package.json
+├── package-lock.json
+├── public
+│   └── assets
+│       └── images
+├── README.md
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── components
+│   │   ├── Chessboard
+│   │   ├── FallenPiecesRack
+│   │   ├── GameOptionsBoard
+│   │   ├── Header
+│   │   ├── Modal
+│   │   ├── SavedGames
+│   │   ├── Tile
+│   │   └── Turn
+│   ├── contexts
+│   │   ├── GameContext.tsx
+│   │   └── UserContext.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   ├── models
+│   │   ├── Bishop.ts
+│   │   ├── Board.ts
+│   │   ├── King.ts
+│   │   ├── Knight.ts
+│   │   ├── Pawn.ts
+│   │   ├── Piece.ts
+│   │   ├── Queen.ts
+│   │   └── Rook.ts
+│   └── pages
+│       ├── ChessGame
+│       ├── Login
+│       └── SignUp
+├── tsconfig.json
+├── tsconfig.node.json
+├── vercel.json
+└── vite.config.ts
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- The `public` folder contains the static images.
+- The `src` folder contains the source code of the project
+- The `components` folder contains reusable UI componenets used in the client.
+- The `contexts` folder cotnains the React contexts that are used in the client to easily share common methods and variables accross all components.
+- The `models` folder contains the models of the chess pieces and the board. It contains all pieces on board in form of classes and has methods to calculate and validate all possible moves for each piece.
+- The `pages` folder contains the pages of the application. Each page is a React component that is rendered when the user navigates to a specific route.
+- The `helpers` folder contains the constants and utility functions used in the client.
+
+### How to run the client
+1. Install the dependencies using `npm install`
+2. Run the client using `npm run dev`
+3. The client will be running on `http://localhost:5173/`
