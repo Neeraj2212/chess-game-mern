@@ -1,6 +1,5 @@
-import { DB_DATABASE, DB_HOST, DB_PORT } from '@config';
-import { ConnectOptions } from 'mongoose';
+import { DB_DATABASE, DB_HOST, DB_PORT, MONGODB_URI } from '@config';
 
 export const dbConnection = {
-  url: `mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`,
+  url: MONGODB_URI || `mongodb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}`,
 };
