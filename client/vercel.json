@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/*",
-      "destination": "https://chess-game-backend-yy4g.onrender.com/api/"
+      "source": "/api/(.*)",
+      "destination": "https://chess-game-backend-yy4g.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
