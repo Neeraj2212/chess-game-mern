@@ -44,6 +44,7 @@ const GameOptionsBoard = () => {
         <div className="new-game-options">
           <button
             onClick={() => {
+              board.gameId && saveCurrentGame();
               startNewGame();
             }}
             className="btn"
